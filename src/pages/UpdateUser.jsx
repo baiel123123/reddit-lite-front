@@ -1,4 +1,3 @@
-// UpdateUser.jsx
 import React, { useState, useEffect } from 'react';
 
 export default function UpdateUser() {
@@ -6,18 +5,23 @@ export default function UpdateUser() {
     nickname: '',
     about_me: '',
     gender: '',
+    date_of_birth: '',  // добавляем новое поле
   });
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Загрузим текущие данные пользователя (если есть API /users/me/)
     fetch('/users/me/')
       .then(res => res.json())
       .then(data => {
+        let date_of_birth = '';
+        if (data.date_of_birth) {
+            date_of_birth = data.date_of_birth.split('T')[0];  // "2025-05-16"
+        }
         setUserData({
           nickname: data.nickname || '',
           about_me: data.about_me || '',
           gender: data.gender || '',
+          birth_date: date_of_birth,
         });
       });
   }, []);
@@ -27,9 +31,10 @@ export default function UpdateUser() {
   };
 
   const updateUser = async () => {
-    const res = await fetch('/users/update_user/', {
-      method: 'PUT', // или PATCH, если твой API принимает
+    const res = await fetch('http://localhost:8000/users/update_user/', {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(userData),
     });
     if (res.ok) setMessage('Данные обновлены');
@@ -57,6 +62,13 @@ export default function UpdateUser() {
         <option value="female">Женский</option>
         <option value="other">Другой</option>
       </select>
+      {/* Поле для даты */}
+      <input
+        type="date"
+        name="date_of_birth"
+        value={userData.date_of_birth}
+        onChange={handleChange}
+      />
       <button onClick={updateUser}>Сохранить</button>
       <p>{message}</p>
     </div>
