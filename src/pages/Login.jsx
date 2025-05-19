@@ -29,7 +29,7 @@ export default function Login() {
       .then((res) => res.json())
       .then((data) => {
         login(data); // вызываем login, который обновит user в контексте
-        navigate("/profile");
+        navigate("/");
       })
       .catch((e) => setError(e.message));
   };

@@ -13,7 +13,7 @@ import UpdateUser from "./pages/UpdateUser";
 import Navbar from "./components/Navbar";
 import Settings from "./pages/Settings";
 import Home from "./pages/Home";
-
+import ActivateAccount from "./pages/ActivateAccount"
 
 function App() {
   return (
@@ -59,6 +59,14 @@ function App() {
                 <AdminRoute>
                   <Roles />
                 </AdminRoute>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/activate"
+            element={
+              <ProtectedRoute>
+                <ActivateAccount />
               </ProtectedRoute>
             }
           />

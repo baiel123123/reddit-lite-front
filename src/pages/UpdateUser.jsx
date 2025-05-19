@@ -31,15 +31,25 @@ export default function UpdateUser() {
   };
 
   const updateUser = async () => {
-    const res = await fetch('http://localhost:8000/users/update_user/', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(userData),
-    });
-    if (res.ok) setMessage('Данные обновлены');
-    else setMessage('Ошибка при обновлении');
-  };
+  const token = localStorage.getItem('access_token');
+
+  const res = await fetch('http://localhost:8000/users/update_user/', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (res.status === 401 || res.status === 403) {
+    setMessage('Пожалуйста, авторизуйтесь');
+    return;
+  }
+
+  if (res.ok) setMessage('Данные обновлены');
+  else setMessage('Ошибка при обновлении');
+};
 
   return (
     <div>
