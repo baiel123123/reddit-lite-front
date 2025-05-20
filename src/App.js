@@ -1,82 +1,70 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import BanUser from "./pages/BanUser";
-import Roles from "./pages/Roles";
 import UpdateUser from "./pages/UpdateUser";
 import Navbar from "./components/Navbar";
 import Settings from "./pages/Settings";
 import Home from "./pages/Home";
-import ActivateAccount from "./pages/ActivateAccount"
+import ActivateAccount from "./pages/ActivateAccount";
+import UserSearch from "./pages/UserSearch";
+import RoleUpdate from "./pages/RoleUpdate";
+import DeleteMyAccount from "./pages/DeleteMyAccount";
+import DeleteUserById from "./pages/DeleteUserById";
+import AdminTools from "./pages/AdminTools";
+import UserProfilePage from "./pages/Profile"
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Navbar />
         <Routes>
-         <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<ProtectedRoute><UserSearch /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/update-user" element={<ProtectedRoute><UpdateUser /></ProtectedRoute>} />
+          <Route path="/ban-user" element={<ProtectedRoute><AdminRoute><BanUser /></AdminRoute></ProtectedRoute>} />
+          <Route path="/activate" element={<ProtectedRoute><ActivateAccount /></ProtectedRoute>} />
 
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/role-update" element={
+            <ProtectedRoute>
+              <AdminRoute>
+                <RoleUpdate />
+              </AdminRoute>
+            </ProtectedRoute>
+          } />
 
-          <Route
-            path="/update-user"
-            element={
-              <ProtectedRoute>
-                <UpdateUser />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/delete-account" element={<ProtectedRoute><DeleteMyAccount /></ProtectedRoute>} />
 
-          <Route
-            path="/ban-user"
-            element={
-              <ProtectedRoute>
+          <Route path="/delete-user-by-id" element={
+            <ProtectedRoute>
                 <AdminRoute>
-                  <BanUser />
+                  <DeleteUserById />
                 </AdminRoute>
-              </ProtectedRoute>
-            }
-          />
+            </ProtectedRoute>
+          } />
 
-          <Route
-            path="/roles"
-            element={
-              <ProtectedRoute>
-                <AdminRoute>
-                  <Roles />
-                </AdminRoute>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/activate"
-            element={
-              <ProtectedRoute>
-                <ActivateAccount />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/admin-tools" element={
+            <ProtectedRoute>
+              <AdminRoute>
+                <AdminTools />
+              </AdminRoute>
+            </ProtectedRoute>
+          } />
+          <Route path="/profile/:userId" element={<UserProfilePage />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<div>404: Страница не найдена</div>} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

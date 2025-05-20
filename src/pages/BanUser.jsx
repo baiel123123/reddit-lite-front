@@ -6,13 +6,13 @@ export default function BanUser() {
   const [message, setMessage] = useState('');
 
   const banUser = async () => {
-    const res = await fetch(`/users/ban/${userId}`, { method: 'POST' });
+    const res = await fetch(`http://localhost:8000/users/ban/${userId}`, { method: 'POST' });
     if (res.ok) setMessage('Пользователь забанен');
     else setMessage('Ошибка при бане');
   };
 
   const unbanUser = async () => {
-    const res = await fetch(`/users/unban/${userId}`, { method: 'POST' });
+    const res = await fetch(`http://localhost:8000/users/unban/${userId}`, { method: 'POST' });
     if (res.ok) setMessage('Пользователь разбанен');
     else setMessage('Ошибка при разбане');
   };
