@@ -1,13 +1,17 @@
-// src/pages/Home.jsx
 import React from "react";
+import PostFeed from "./PostFeed";
+// import CommunityList from "./CommunityList";
 
-function Home() {
+export default function Home() {
   return (
     <div style={{ padding: "20px" }}>
       <h1>Главная</h1>
-      <p>Здесь будут отображаться посты.</p>
+
+      {/* Лента постов */}
+      <PostFeed />
+
+      {/* Список сообществ — позже */}
+      {/* <CommunityList /> */}
     </div>
   );
 }
-
-export default Home;
