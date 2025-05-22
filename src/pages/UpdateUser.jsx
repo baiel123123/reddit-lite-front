@@ -21,7 +21,7 @@ export default function UpdateUser() {
           nickname: data.nickname || '',
           about_me: data.about_me || '',
           gender: data.gender || '',
-          birth_date: date_of_birth,
+          date_of_birth: date_of_birth
         });
       });
   }, []);
@@ -30,14 +30,12 @@ export default function UpdateUser() {
     setUserData({...userData, [e.target.name]: e.target.value});
   };
 
-  const updateUser = async () => {
-  const token = localStorage.getItem('access_token');
-
+const updateUser = async () => {
   const res = await fetch('http://localhost:8000/users/update_user/', {
     method: 'PUT',
+    credentials: 'include',  // важный момент!
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify(userData),
   });
