@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Post from "../components/Upvote"; // путь поправь под свою структуру
+import { useNavigate } from "react-router-dom";
 
 export default function PostFeed() {
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState("hot");
   const [offset, setOffset] = useState(0);
   const limit = 10;
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(
@@ -14,7 +16,6 @@ export default function PostFeed() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("Ответ с сервера:", data);
         setPosts(Array.isArray(data) ? data : []);
       })
       .catch(console.error);
@@ -31,7 +32,9 @@ export default function PostFeed() {
       </select>
 
       {posts.map((post) => (
-        <Post key={post.id} post={post} />
+        <div key={post.id} onClick={() => navigate(`/post/${post.id}`)} style={{ cursor: "pointer" }}>
+          <Post post={post} />
+        </div>
       ))}
 
       <div style={{ marginTop: 20 }}>

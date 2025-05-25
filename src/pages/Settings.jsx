@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import UserProfile from "../components/UserProfile";
 
 export default function Settings() {
   const { user } = useContext(AuthContext);
@@ -17,10 +16,15 @@ export default function Settings() {
 
       <div style={{ marginBottom: '20px' }}>
         <h3>Профиль</h3>
-        <UserProfile user={user} currentUser={user} />
+        {/* Вместо UserProfile теперь ссылка на твой профиль */}
+        <Link to="/my-profile">
+          <button>Перейти в мой профиль</button>
+        </Link>
 
         <p><strong>Обновить профиль:</strong> {user?.role}</p>
-        <Link to="/update-user"><button>Обновить</button></Link>
+        <Link to="/update-user">
+          <button>Обновить</button>
+        </Link>
       </div>
 
       {!user?.is_activated && (

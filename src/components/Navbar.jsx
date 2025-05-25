@@ -7,15 +7,29 @@ function Navbar() {
   const { user } = useContext(AuthContext);
 
   return (
-    <nav style={{ padding: "10px", background: "#eee", display: "flex", gap: "10px" }}>
+    <nav style={{
+      padding: "10px",
+      background: "#eee",
+      display: "flex",
+      gap: "10px",
+      alignItems: "center"
+    }}>
       <Link to="/">Главная</Link>
 
       {user ? (
         <>
+          <Link to="/my-profile">Мой профиль</Link>
           <Link to="/settings">Настройки</Link>
           <Link to="/search">Поиск пользователей</Link>
 
-          {user && (user.role_id === 2 || user.role_id === 3) && (
+          {/* Добавляем кнопку "Создать пост" в Navbar */}
+          <Link to="/create-post" style={{ marginLeft: "auto" }}>
+            <button style={{ padding: "6px 12px", cursor: "pointer" }}>
+              Создать пост
+            </button>
+          </Link>
+
+          {(user.role_id === 2 || user.role_id === 3) && (
             <Link to="/admin-tools">Admin Tools</Link>
           )}
 

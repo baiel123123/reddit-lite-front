@@ -18,6 +18,10 @@ import DeleteMyAccount from "./pages/DeleteMyAccount";
 import DeleteUserById from "./pages/DeleteUserById";
 import AdminTools from "./pages/AdminTools";
 import UserProfilePage from "./pages/Profile"
+import MyProfile from "./pages/MyProfile";
+import CreatePost from "./pages/CreatePost.jsx";
+import EditPost from "./pages/EditPost.jsx";
+import PostPage from "./pages/PostPage.jsx"
 
 function App() {
   return (
@@ -58,6 +62,11 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/profile/:userId" element={<UserProfilePage />} />
+          <Route path="/my-profile" element={<MyProfile />} />
+          <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/edit-post/:postId" element={<EditPost />} />
+          <Route path="/post/:postId" element={<PostPage />} />
+
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
