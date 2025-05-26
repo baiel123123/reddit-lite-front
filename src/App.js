@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Register from "./pages/Register.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import BanUser from "./features/users/components/BanUser";
@@ -11,17 +11,17 @@ import UpdateUser from "./features/users/components/UpdateUser";
 import Navbar from "./components/Navbar";
 import Settings from "./pages/Settings";
 import Home from "./pages/Home";
-import ActivateAccount from "./pages/ActivateAccount";
+import ActivateAccount from "./features/users/components/ActivateAccount";
 import UserSearch from "./pages/UserSearch";
-import RoleUpdate from "./pages/RoleUpdate";
-import DeleteMyAccount from "./pages/DeleteMyAccount";
-import DeleteUserById from "./pages/DeleteUserById";
-import AdminTools from "./pages/AdminTools";
-import UserProfilePage from "./pages/Profile"
-import MyProfile from "./pages/MyProfile";
-import CreatePost from "./pages/CreatePost.jsx";
-import EditPost from "./pages/EditPost.jsx";
-import PostPage from "./pages/PostPage.jsx"
+import RoleUpdate from "./features/users/components/RoleUpdate";
+import DeleteMyAccount from "./features/users/components/DeleteMyAccount";
+import DeleteUserById from "./features/users/components/DeleteUserById";
+import AdminTools from "./features/users/AdminTools";
+import UserProfilePage from "./features/users/Profile"
+import MyProfile from "./features/users/MyProfile";
+import CreatePost from "./features/posts/components/CreatePost";
+import EditPost from "./features/posts/components/EditPost";
+import PostPage from "./features/posts/PostPage";
 
 function App() {
   return (

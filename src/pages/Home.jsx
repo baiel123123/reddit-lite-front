@@ -1,5 +1,5 @@
 import React from "react";
-import PostFeed from "./PostFeed";
+import PostFeed from "../features/posts/PostFeed";
 // import CommunityList from "./CommunityList";
 
 export default function Home() {
