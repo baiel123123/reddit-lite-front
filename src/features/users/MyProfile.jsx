@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import UserProfile from "../components/UserProfile";
+import UserProfile from "./components/UserProfile";
 import { Link, useNavigate } from "react-router-dom";
+import Upvote from "../../components/Upvote";
 
 export default function MyProfile() {
   const [user, setUser] = useState(null);
@@ -86,19 +87,29 @@ export default function MyProfile() {
       ) : (
         <ul>
           {posts.map((post) => (
-            <li key={post.id} style={{ marginBottom: "10px" }}>
-              <Link to={`/post/${post.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                <strong>{post.title}</strong>
-              </Link>
+            <li key={post.id} style={{ marginBottom: "10px", listStyle: "none" }}>
+              <div
+                onClick={() => navigate(`/post/${post.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <Upvote post={post} />
+              </div>
+
               <div>
                 <button
-                  onClick={() => navigate(`/edit-post/${post.id}`)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/edit-post/${post.id}`);
+                  }}
                   style={{ marginRight: "10px" }}
                 >
                   Редактировать
                 </button>
                 <button
-                  onClick={() => handleDelete(post.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(post.id);
+                  }}
                   style={{ color: "red" }}
                 >
                   Удалить

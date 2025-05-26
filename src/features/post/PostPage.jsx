@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import PostItem from "../components/PostItem";
+import PostItem from "./components/PostItem";
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -16,6 +16,7 @@ export default function PostPage() {
         });
         if (!res.ok) throw new Error("Пост не найден");
         const data = await res.json();
+        console.log(data)
         setPost(data);
       } catch (err) {
         setError(err.message);

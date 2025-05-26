@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import UserProfile from "../components/UserProfile";
-import Post from "../components/Upvote"; // или твой компонент для отображения поста
+import UserProfile from "./components/UserProfile";
+import Post from "../../components/Upvote";
 
 export default function UserProfilePage() {
   const { userId } = useParams();

@@ -1,18 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function Upvote({ post }) {
-  const [upvotes, setUpvotes] = useState(post.upvotes);
-  const [hasVoted, setHasVoted] = useState(post.user_vote); // true, false или null
+function Upvote({ post, onVoteUpdate }) {
+  const [upvotes, setUpvotes] = useState(post.upvotes ?? post.upvote ?? 0);
+  const [hasVoted, setHasVoted] = useState(post.user_vote ?? null);
+
+  useEffect(() => {
+    setUpvotes(post.upvotes ?? post.upvote ?? 0);
+    setHasVoted(post.user_vote ?? null);
+  }, [post]);
 
   const vote = async (isUpvote) => {
-    const res = await fetch(`http://localhost:8000/posts/upvote/${post.id}?is_upvote=${isUpvote}`, {
-      method: "POST",
-      credentials: "include",
-    });
+    const res = await fetch(
+      `http://localhost:8000/posts/upvote/${post.id}?is_upvote=${isUpvote}`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
     const data = await res.json();
-    if (data.upvotes !== undefined) {
-      setUpvotes(data.upvotes);
+    const updatedVotes = data.upvotes ?? data.upvote;
+    if (updatedVotes !== undefined) {
+      setUpvotes(updatedVotes);
       setHasVoted(isUpvote);
+      if (onVoteUpdate) onVoteUpdate(post.id, updatedVotes, isUpvote);
     }
   };
 
@@ -22,29 +32,23 @@ function Upvote({ post }) {
       credentials: "include",
     });
     const data = await res.json();
-    if (data.upvotes !== undefined) {
-      setUpvotes(data.upvotes);
+    const updatedVotes = data.upvotes ?? data.upvote;
+    if (updatedVotes !== undefined) {
+      setUpvotes(updatedVotes);
       setHasVoted(null);
+      if (onVoteUpdate) onVoteUpdate(post.id, updatedVotes, null);
     }
   };
 
-    const handleUpvoteClick = (e) => {
-      e.stopPropagation();
-      if (hasVoted === true) {
-        removeVote();
-      } else {
-        vote(true);
-      }
-    };
+  const handleUpvoteClick = (e) => {
+    e.stopPropagation();
+    hasVoted === true ? removeVote() : vote(true);
+  };
 
-    const handleDownvoteClick = (e) => {
-      e.stopPropagation();
-      if (hasVoted === false) {
-        removeVote();
-      } else {
-        vote(false);
-      }
-    };
+  const handleDownvoteClick = (e) => {
+    e.stopPropagation();
+    hasVoted === false ? removeVote() : vote(false);
+  };
 
   return (
     <div style={{ border: "1px solid #ccc", padding: 10, marginBottom: 10 }}>

@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Upvote from "../../../components/Upvote";
 
-export default function PostItem({ post, currentUser, onDelete }) {
+export default function PostItem({ post, currentUser, onDelete, onVoteUpdate }) {
   const navigate = useNavigate();
   const isOwner = currentUser?.id === post.user_id;
 
@@ -22,10 +23,8 @@ export default function PostItem({ post, currentUser, onDelete }) {
 
   return (
     <div style={{ border: "1px solid #ccc", padding: "1rem", marginBottom: "1rem" }}>
-      <Link to={`/post/${post.id}`}>
-        <h3>{post.title}</h3>
-      </Link>
-      <p>{post.content}</p>
+      <Upvote post={post} onVoteUpdate={onVoteUpdate} />
+
       <p style={{ color: "gray" }}>Subreddit ID: {post.subreddit_id}</p>
 
       {isOwner && (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Post from "../components/Upvote"; // путь поправь под свою структуру
+import Post from "../../components/Upvote";
 import { useNavigate } from "react-router-dom";
 
 export default function PostFeed() {
@@ -32,13 +32,20 @@ export default function PostFeed() {
       </select>
 
       {posts.map((post) => (
-        <div key={post.id} onClick={() => navigate(`/post/${post.id}`)} style={{ cursor: "pointer" }}>
-          <Post post={post} />
+        <div
+          key={post.id}
+          onClick={() => navigate(`/post/${post.id}`)}
+          style={{ cursor: "pointer" }}
+        >
+          <Post post={post}  />
         </div>
       ))}
 
       <div style={{ marginTop: 20 }}>
-        <button onClick={() => setOffset((prev) => Math.max(prev - limit, 0))} disabled={offset === 0}>
+        <button
+          onClick={() => setOffset((prev) => Math.max(prev - limit, 0))}
+          disabled={offset === 0}
+        >
           Назад
         </button>
         <button onClick={() => setOffset((prev) => prev + limit)} style={{ marginLeft: 10 }}>
