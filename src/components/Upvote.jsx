@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import VoteButtons from "./VoteButtons"; // путь зависит от структуры
 
 function Upvote({ post, onVoteUpdate }) {
   const [upvotes, setUpvotes] = useState(post.upvotes ?? post.upvote ?? 0);
@@ -55,31 +56,12 @@ function Upvote({ post, onVoteUpdate }) {
       <h3>{post.title}</h3>
       <p>{post.content}</p>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <button
-          onClick={handleUpvoteClick}
-          style={{
-            color: hasVoted === true ? "orange" : "black",
-            fontWeight: hasVoted === true ? "bold" : "normal",
-            cursor: "pointer",
-          }}
-          aria-label="Upvote"
-        >
-          ▲
-        </button>
-        <span>{upvotes}</span>
-        <button
-          onClick={handleDownvoteClick}
-          style={{
-            color: hasVoted === false ? "blue" : "black",
-            fontWeight: hasVoted === false ? "bold" : "normal",
-            cursor: "pointer",
-          }}
-          aria-label="Downvote"
-        >
-          ▼
-        </button>
-      </div>
+      <VoteButtons
+        vote={hasVoted}
+        upvotes={upvotes}
+        onUpvote={handleUpvoteClick}
+        onDownvote={handleDownvoteClick}
+      />
     </div>
   );
 }
