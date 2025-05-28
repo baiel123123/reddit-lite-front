@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Post from "../../components/Upvote";
+import PostVotes from "../../components/PostVotes";
 import { useNavigate } from "react-router-dom";
 
 export default function PostFeed() {
@@ -20,6 +20,7 @@ export default function PostFeed() {
       })
       .catch(console.error);
   }, [sortBy, offset]);
+  console.log(posts)
 
   return (
     <div>
@@ -35,9 +36,20 @@ export default function PostFeed() {
         <div
           key={post.id}
           onClick={() => navigate(`/post/${post.id}`)}
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            border: "1px solid #ccc",
+            marginBottom: 10,
+            padding: 10,
+          }}
         >
-          <Post post={post}  />
+
+          <h4>{post.title}</h4>
+          <p>{post.content}</p>
+          <p style={{ fontSize: 12, color: "#777" }}>
+            Автор: {post.user.username}
+          </p>
+          <PostVotes post={post} />
         </div>
       ))}
 

@@ -18,12 +18,10 @@ import DeleteMyAccount from "./features/users/components/DeleteMyAccount";
 import DeleteUserById from "./features/users/components/DeleteUserById";
 import AdminTools from "./features/users/AdminTools";
 import UserProfilePage from "./features/users/Profile"
-import MyProfile from "./features/users/MyProfile";
+import MyProfile from "./pages/MyProfile.jsx";
 import CreatePost from "./features/posts/components/CreatePost";
 import EditPost from "./features/posts/components/EditPost";
 import PostPage from "./features/posts/PostPage";
-import CommentPostPage from './features/comments/CommentPostPage.jsx';
-import CommentPage from './features/comments/CommentPage.jsx';
 
 function App() {
   return (
@@ -69,9 +67,6 @@ function App() {
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/edit-post/:postId" element={<EditPost />} />
           <Route path="/post/:postId" element={<PostPage />} />
-
-          <Route path="/post/:postId/comments" element={<CommentPostPage />} />
-          <Route path="/comment/:commentId" element={<CommentPage />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

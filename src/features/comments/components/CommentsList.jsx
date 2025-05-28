@@ -1,9 +1,7 @@
 import React from "react";
 import CommentItem from "./CommentItem";
 
-export default function CommentsList({ comments, onVote, onRemoveVote }) {
-  if (!comments.length) return <p>Комментариев пока нет</p>;
-
+export default function CommentsList({ comments, onVote, onRemoveVote, onDelete, currentUser, onUpdate }) {
   return (
     <div>
       {comments.map((comment) => (
@@ -12,6 +10,9 @@ export default function CommentsList({ comments, onVote, onRemoveVote }) {
           comment={comment}
           onVote={onVote}
           onRemoveVote={onRemoveVote}
+          onDelete={onDelete}
+          currentUser={currentUser}
+          onUpdate={onUpdate}
         />
       ))}
     </div>

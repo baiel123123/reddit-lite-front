@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserProfile from "./components/UserProfile";
-import Post from "../../components/Upvote";
+import Post from "../../components/PostVotes";
 
 export default function UserProfilePage() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -43,8 +44,22 @@ export default function UserProfilePage() {
       }
     };
 
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/users/me", {
+          credentials: "include",
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        setCurrentUser(data);
+      } catch (err) {
+        console.error("Ошибка загрузки текущего пользователя", err);
+      }
+    };
+
     fetchUser();
     fetchUserPosts();
+    fetchCurrentUser();
   }, [userId]);
 
   if (error) return <p>{error}</p>;
@@ -52,7 +67,7 @@ export default function UserProfilePage() {
 
   return (
     <div>
-      <UserProfile user={user} />
+      <UserProfile user={user} currentUser={currentUser}/>
 
       <h3>Посты пользователя</h3>
       {posts.length === 0 ? (

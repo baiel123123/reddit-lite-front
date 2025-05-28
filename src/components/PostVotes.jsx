@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import VoteButtons from "./VoteButtons"; // путь зависит от структуры
+// components/PostVotes.jsx
+import React, { useEffect, useState } from "react";
+import VoteButtons from "./VoteButtons";
 
-function Upvote({ post, onVoteUpdate }) {
+export default function PostVotes({ post, onVoteUpdate }) {
   const [upvotes, setUpvotes] = useState(post.upvotes ?? post.upvote ?? 0);
   const [hasVoted, setHasVoted] = useState(post.user_vote ?? null);
 
@@ -52,18 +53,11 @@ function Upvote({ post, onVoteUpdate }) {
   };
 
   return (
-    <div style={{ border: "1px solid #ccc", padding: 10, marginBottom: 10 }}>
-      <h3>{post.title}</h3>
-      <p>{post.content}</p>
-
-      <VoteButtons
-        vote={hasVoted}
-        upvotes={upvotes}
-        onUpvote={handleUpvoteClick}
-        onDownvote={handleDownvoteClick}
-      />
-    </div>
+    <VoteButtons
+      vote={hasVoted}
+      upvotes={upvotes}
+      onUpvote={handleUpvoteClick}
+      onDownvote={handleDownvoteClick}
+    />
   );
 }
-
-export default Upvote;

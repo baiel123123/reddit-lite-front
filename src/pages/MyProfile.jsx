@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import UserProfile from "./components/UserProfile";
+import UserProfile from "../features/users/components/UserProfile";
 import { Link, useNavigate } from "react-router-dom";
-import Upvote from "../../components/Upvote";
+import Upvote from "../components/PostVotes";
 
 export default function MyProfile() {
   const [user, setUser] = useState(null);
@@ -9,46 +9,36 @@ export default function MyProfile() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Функция для получения постов пользователя
-  const fetchUserPosts = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/posts/my_posts/", {
-          method: "GET",
-          credentials: "include",
-      });
-    if (!res.ok) {
-      const errorText = await res.text(); // получаем тело ошибки
-      throw new Error(`Ошибка при загрузке постов: ${res.status} ${res.statusText} - ${errorText}`);
-    }
-      const data = await res.json();
-      setPosts(data);
-    } catch (error) {
-      console.error("Ошибка при загрузке постов:", error);
-      setError(error.message);
-    }
-  };
 
-  const fetchCurrentUser = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/users/me", {
-        credentials: "include",
-      });
-      console.log("Статус ответа:", res.status);
-      if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Текст ошибки с сервера:", errorText);
-        throw new Error("Ошибка при загрузке постов");
-      }
-      const data = await res.json();
-      setUser(data);
-      await fetchUserPosts();
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  // Один useEffect для загрузки данных при монтировании компонента
   useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/users/me", {
+          credentials: "include",
+        });
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error("Ошибка при загрузке пользователя:", errorText);
+          throw new Error("Ошибка при загрузке пользователя");
+        }
+        const data = await res.json();
+        setUser(data);
+
+        const postsRes = await fetch("http://localhost:8000/posts/my_posts/", {
+          credentials: "include",
+        });
+        if (!postsRes.ok) {
+          const errorText = await postsRes.text();
+          throw new Error(`Ошибка при загрузке постов: ${errorText}`);
+        }
+        const postsData = await postsRes.json();
+        setPosts(Array.isArray(postsData) ? postsData : []);
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+      }
+    };
+
     fetchCurrentUser();
   }, []);
 
@@ -73,7 +63,7 @@ export default function MyProfile() {
 
   return (
     <div>
-      <UserProfile user={user} />
+      <UserProfile user={user} currentUser={user} />
       <p>
         <strong>Обновить профиль:</strong> {user?.role}
       </p>

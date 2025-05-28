@@ -33,6 +33,7 @@ export default function UserProfile({ user, currentUser }) {
           <p><strong>role_id:</strong> {user.role_id}</p>
         </>
       )}
+      
     </div>
   );
 }
