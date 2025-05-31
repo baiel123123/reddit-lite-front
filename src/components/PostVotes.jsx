@@ -1,4 +1,3 @@
-// components/PostVotes.jsx
 import React, { useEffect, useState } from "react";
 import VoteButtons from "./VoteButtons";
 
@@ -54,7 +53,7 @@ export default function PostVotes({ post, onVoteUpdate }) {
 
   return (
     <VoteButtons
-      vote={hasVoted}
+      vote={hasVoted} 
       upvotes={upvotes}
       onUpvote={handleUpvoteClick}
       onDownvote={handleDownvoteClick}

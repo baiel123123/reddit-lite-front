@@ -82,6 +82,7 @@ export default function MyProfile() {
                 onClick={() => navigate(`/post/${post.id}`)}
                 style={{ cursor: "pointer" }}
               >
+                <h4>{post.title}</h4> 
                 <Upvote post={post} />
               </div>
 
