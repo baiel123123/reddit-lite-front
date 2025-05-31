@@ -1,14 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../context/AuthContext";
 
 export default function CreatePost() {
-  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [subredditId, setSubredditId] = useState(""); // Можно сделать выбор сабреддита, если нужно
+  const [subredditId, setSubredditId] = useState(""); 
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {

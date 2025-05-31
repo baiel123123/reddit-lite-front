@@ -10,17 +10,36 @@ export default function PostFeed() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(
-      `http://localhost:8000/posts/lenta/?sort_by=${sortBy}&limit=${limit}&offset=${offset}`,
-      { credentials: "include" }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setPosts(Array.isArray(data) ? data : []);
-      })
-      .catch(console.error);
+    async function loadPostsAndVotes() {
+      try {
+        const res = await fetch(
+          `http://localhost:8000/posts/lenta/?sort_by=${sortBy}&limit=${limit}&offset=${offset}`,
+          { credentials: "include" }
+        );
+        const postsData = await res.json();
+        setPosts(postsData);
+
+        const ids = postsData.map((p) => p.id).join(",");
+        const voteRes = await fetch(
+          `http://localhost:8000/posts/votes/by-user?ids=${ids}`,
+          { credentials: "include" }
+        );
+        const votes = await voteRes.json();
+
+        const updatedPosts = postsData.map((post) => ({
+          ...post,
+          user_vote: votes[post.id] ?? null,
+        }));
+
+        setPosts(updatedPosts);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadPostsAndVotes();
   }, [sortBy, offset]);
-  console.log(posts)
+
 
   return (
     <div>

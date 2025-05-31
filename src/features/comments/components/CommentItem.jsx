@@ -42,7 +42,6 @@ export default function CommentItem({ comment, onVote, onRemoveVote, onDelete, o
       return;
     }
     try {
-      // Отправляем PUT-запрос на сервер для обновления комментария
       const res = await fetch(`http://localhost:8000/comments/${comment.id}`, {
         method: "PUT",
         credentials: "include",
@@ -74,7 +73,6 @@ export default function CommentItem({ comment, onVote, onRemoveVote, onDelete, o
       </div>
     );
   }
-  console.log(currentUser)
 
   return (
     <div style={{ borderBottom: '1px solid #ccc', padding: 10 }}>

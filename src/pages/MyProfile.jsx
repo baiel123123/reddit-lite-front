@@ -16,23 +16,28 @@ export default function MyProfile() {
         const res = await fetch("http://localhost:8000/users/me", {
           credentials: "include",
         });
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("Ошибка при загрузке пользователя:", errorText);
-          throw new Error("Ошибка при загрузке пользователя");
-        }
+        if (!res.ok) throw new Error("Ошибка при загрузке пользователя");
         const data = await res.json();
         setUser(data);
 
         const postsRes = await fetch("http://localhost:8000/posts/my_posts/", {
           credentials: "include",
         });
-        if (!postsRes.ok) {
-          const errorText = await postsRes.text();
-          throw new Error(`Ошибка при загрузке постов: ${errorText}`);
-        }
+        if (!postsRes.ok) throw new Error("Ошибка при загрузке постов");
         const postsData = await postsRes.json();
-        setPosts(Array.isArray(postsData) ? postsData : []);
+
+        const ids = postsData.map((p) => p.id).join(",");
+        const voteRes = await fetch(`http://localhost:8000/posts/votes/by-user?ids=${ids}`, {
+          credentials: "include",
+        });
+        const votes = await voteRes.json();
+
+        const postsWithVotes = postsData.map((post) => ({
+          ...post,
+          user_vote: votes[post.id] ?? null,
+        }));
+
+        setPosts(postsWithVotes);
       } catch (err) {
         console.error(err);
         setError(err.message);
