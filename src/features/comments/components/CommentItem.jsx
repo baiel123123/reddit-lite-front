@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 
-export default function CommentItem({ comment, onVote, onRemoveVote, onDelete, onUpdate, currentUser }) {
+export default function CommentItem({
+  comment,
+  onVote,
+  onRemoveVote,
+  onDelete,
+  onUpdate,
+  currentUser,
+  onReply,
+  replies = [],
+}) {
   const [vote, setVote] = useState(comment.user_vote);
   const [upvotes, setUpvotes] = useState(comment.upvote);
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(comment.content);
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyContent, setReplyContent] = useState("");
 
   const handleUpvote = () => {
     if (vote === true) {
@@ -57,6 +68,16 @@ export default function CommentItem({ comment, onVote, onRemoveVote, onDelete, o
     }
   };
 
+  const handleReplySubmit = async () => {
+    if (!replyContent.trim()) {
+      alert("Комментарий не может быть пустым");
+      return;
+    }
+    await onReply(comment.id, replyContent);
+    setReplyContent("");
+    setIsReplying(false);
+  };
+
   if (isEditing) {
     return (
       <div style={{ borderBottom: '1px solid #ccc', padding: 10 }}>
@@ -67,7 +88,10 @@ export default function CommentItem({ comment, onVote, onRemoveVote, onDelete, o
           style={{ width: "100%" }}
         />
         <button onClick={handleSave}>Сохранить</button>
-        <button onClick={() => { setIsEditing(false); setContent(comment.content); }} style={{ marginLeft: 8 }}>
+        <button
+          onClick={() => { setIsEditing(false); setContent(comment.content); }}
+          style={{ marginLeft: 8 }}
+        >
           Отмена
         </button>
       </div>
@@ -75,7 +99,7 @@ export default function CommentItem({ comment, onVote, onRemoveVote, onDelete, o
   }
 
   return (
-    <div style={{ borderBottom: '1px solid #ccc', padding: 10 }}>
+    <div style={{ borderBottom: '1px solid #ccc', padding: 10, marginLeft: comment.parent_comment_id ? 20 : 0 }}>
       <div><strong>User #{comment.user_id || "?"}</strong></div>
       <div>{comment.content}</div>
       <div>
@@ -108,7 +132,44 @@ export default function CommentItem({ comment, onVote, onRemoveVote, onDelete, o
             </button>
           </>
         )}
+        <button
+          onClick={() => setIsReplying(!isReplying)}
+          style={{ marginLeft: 10 }}
+        >
+          {isReplying ? "Отмена" : "Ответить"}
+        </button>
       </div>
+
+      {isReplying && (
+        <div style={{ marginTop: 8 }}>
+          <textarea
+            rows={3}
+            style={{ width: "100%" }}
+            value={replyContent}
+            onChange={(e) => setReplyContent(e.target.value)}
+          />
+          <button onClick={handleReplySubmit}>Отправить ответ</button>
+        </div>
+      )}
+
+      {/* Рекурсивный рендер вложенных ответов */}
+      {replies.length > 0 && (
+        <div style={{ marginTop: 10 }}>
+          {replies.map((reply) => (
+            <CommentItem
+              key={reply.id}
+              comment={reply}
+              onVote={onVote}
+              onRemoveVote={onRemoveVote}
+              onDelete={onDelete}
+              onUpdate={onUpdate}
+              onReply={onReply}
+              currentUser={currentUser}
+              replies={reply.replies || []}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

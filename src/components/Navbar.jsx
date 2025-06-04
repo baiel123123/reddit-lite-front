@@ -22,12 +22,12 @@ function Navbar() {
           <Link to="/settings">Настройки</Link>
           <Link to="/search">Поиск пользователей</Link>
 
-          {/* Добавляем кнопку "Создать пост" в Navbar */}
           <Link to="/create-post" style={{ marginLeft: "auto" }}>
             <button style={{ padding: "6px 12px", cursor: "pointer" }}>
               Создать пост
             </button>
           </Link>
+          <Link to="/subreddits">Сообщества</Link>
 
           {(user.role_id === 2 || user.role_id === 3) && (
             <Link to="/admin-tools">Admin Tools</Link>

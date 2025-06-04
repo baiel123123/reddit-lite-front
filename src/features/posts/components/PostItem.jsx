@@ -28,7 +28,7 @@ export default function PostItem({ post, currentUser, onDelete, onVoteUpdate }) 
       <h3>{post.title}</h3>
       <p>{post.content}</p>
       <p style={{ fontSize: 14, color: "#666" }}>
-        Автор: User #{post.user_id} | Создано: {new Date(post.created_at).toLocaleString()} | Subreddit ID: {post.subreddit_id}
+        Автор: User #{post.user_id} | Создано: {new Date(post.created_at).toLocaleString()} | Subreddit: {post.subreddit_name}
       </p>
       <div style={{ marginRight: "1rem" }}>
         <PostVotes post={post} onVoteUpdate={onVoteUpdate} />

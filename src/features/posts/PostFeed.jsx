@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PostVotes from "../../components/PostVotes";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function PostFeed() {
   const [posts, setPosts] = useState([]);
@@ -68,6 +69,12 @@ export default function PostFeed() {
           <p style={{ fontSize: 12, color: "#777" }}>
             Автор: {post.user.username}
           </p>
+          <p>Subreddit: <Link to={`/subreddit/${post.subreddit.id}`} 
+                        style={{ color: "blue", textDecoration: "underline" }} 
+                        onClick={(e) => e.stopPropagation()}
+                        >
+            {post.subreddit.name}
+          </Link></p>
           <PostVotes post={post} />
         </div>
       ))}

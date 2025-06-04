@@ -1,18 +1,44 @@
 import React from "react";
 import CommentItem from "./CommentItem";
 
-export default function CommentsList({ comments, onVote, onRemoveVote, onDelete, currentUser, onUpdate }) {
+function buildCommentTree(comments) {
+  const map = {};
+  const roots = [];
+
+  comments.forEach((comment) => {
+    comment.replies = [];
+    map[comment.id] = comment;
+  });
+
+  comments.forEach((comment) => {
+    if (comment.parent_comment_id) {
+      const parent = map[comment.parent_comment_id];
+      if (parent) parent.replies.push(comment);
+      else roots.push(comment); // если родитель не найден
+    } else {
+      roots.push(comment);
+    }
+  });
+
+  return roots;
+}
+
+export default function CommentsList({ comments, onVote, onRemoveVote, onDelete, currentUser, onUpdate, onReply }) {
+  const tree = buildCommentTree(comments);
+
   return (
     <div>
-      {comments.map((comment) => (
+      {tree.map((comment) => (
         <CommentItem
           key={comment.id}
           comment={comment}
           onVote={onVote}
           onRemoveVote={onRemoveVote}
           onDelete={onDelete}
-          currentUser={currentUser}
           onUpdate={onUpdate}
+          onReply={onReply}
+          currentUser={currentUser}
+          replies={comment.replies}
         />
       ))}
     </div>

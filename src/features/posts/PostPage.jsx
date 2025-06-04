@@ -81,15 +81,6 @@ export default function PostPage() {
     }
   }
 
-  useEffect(() => {
-    fetchPost();
-    fetchComments(0);
-    fetchCurrentUser();
-  }, [fetchPost, fetchComments, fetchCurrentUser]);
-
-  if (error) return <p>{error}</p>;
-  if (!post) return <p>Загрузка...</p>;
-
   const handleCommentVote = async (commentId, isUpvote) => {
     try {
       const res = await fetch(
@@ -141,12 +132,38 @@ export default function PostPage() {
       console.error(err);
     }
   };
-  
+
   const handleCommentUpdate = (updatedComment) => {
     setComments((prev) =>
       prev.map((c) => (c.id === updatedComment.id ? updatedComment : c))
     );
   };
+
+
+  const handleReply = async (parentCommentId, replyContent) => {
+    try {
+      const res = await fetch(`http://localhost:8000/comments/reply_to_comment/${parentCommentId}`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: replyContent, post_id: postId }),
+      });
+      if (!res.ok) throw new Error("Ошибка при отправке ответа");
+      const newComment = await res.json();
+      setComments((prev) => [newComment, ...prev]); // Добавляем новый ответ в начало списка
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchPost();
+    fetchComments(0);
+    fetchCurrentUser();
+  }, [fetchPost, fetchComments, fetchCurrentUser]);
+
+  if (error) return <p>{error}</p>;
+  if (!post) return <p>Загрузка...</p>;
 
   return (
     <div>
@@ -163,6 +180,7 @@ export default function PostPage() {
         onDelete={onDeleteComment}
         currentUser={currentUser}
         onUpdate={handleCommentUpdate}
+        onReply={handleReply} // Передаем функцию reply
       />
 
       {hasMore && (

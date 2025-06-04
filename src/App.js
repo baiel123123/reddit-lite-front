@@ -22,6 +22,8 @@ import MyProfile from "./pages/MyProfile.jsx";
 import CreatePost from "./features/posts/components/CreatePost";
 import EditPost from "./features/posts/components/EditPost";
 import PostPage from "./features/posts/PostPage";
+import SubredditManagerPage from "./features/subreddits/SubredditManagerPage";
+import SubredditDetailPage from "./features/subreddits/components/SubredditDetailPage";
 
 function App() {
   return (
@@ -67,6 +69,9 @@ function App() {
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/edit-post/:postId" element={<EditPost />} />
           <Route path="/post/:postId" element={<PostPage />} />
+
+          <Route path="/subreddits" element={<SubredditManagerPage />} />
+          <Route path="/subreddit/:subredditId" element={<SubredditDetailPage />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
