@@ -23,24 +23,30 @@ function buildCommentTree(comments) {
   return roots;
 }
 
-export default function CommentsList({ comments, onVote, onRemoveVote, onDelete, currentUser, onUpdate, onReply }) {
+export default function CommentsList({ comments, onVote, onRemoveVote, onDelete, currentUser, onUpdate, onReply, lastCommentRef, }) {
   const tree = buildCommentTree(comments);
 
   return (
     <div>
-      {tree.map((comment) => (
-        <CommentItem
-          key={comment.id}
-          comment={comment}
-          onVote={onVote}
-          onRemoveVote={onRemoveVote}
-          onDelete={onDelete}
-          onUpdate={onUpdate}
-          onReply={onReply}
-          currentUser={currentUser}
-          replies={comment.replies}
-        />
-      ))}
+      {tree.map((comment, index) => {
+        const isLast = index === tree.length - 1;
+
+        return (
+          <div key={comment.id} ref={isLast ? lastCommentRef : null}>
+            <CommentItem
+              comment={comment}
+              onVote={onVote}
+              onRemoveVote={onRemoveVote}
+              onDelete={onDelete}
+              onUpdate={onUpdate}
+              onReply={onReply}
+              currentUser={currentUser}
+              replies={comment.replies}
+              level={0}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }

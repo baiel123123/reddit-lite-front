@@ -1,5 +1,61 @@
 import React, { useState } from 'react';
 
+function timeAgo(dateString) {
+  const now = new Date();
+  const date = new Date(dateString);
+  const seconds = Math.floor((now - date) / 1000);
+
+  const intervals = [
+    { label: 'год', seconds: 31536000 },
+    { label: 'месяц', seconds: 2592000 },
+    { label: 'день', seconds: 86400 },
+    { label: 'час', seconds: 3600 },
+    { label: 'минуту', seconds: 60 },
+    { label: 'секунду', seconds: 1 },
+  ];
+
+  for (let i = 0; i < intervals.length; i++) {
+    const interval = Math.floor(seconds / intervals[i].seconds);
+    if (interval >= 1) {
+      // Правильное склонение слова
+      const label = intervals[i].label;
+      const pluralized = pluralize(label, interval);
+      return `${interval} ${pluralized} назад`;
+    }
+  }
+  return 'только что';
+}
+
+function pluralize(word, count) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) {
+    return word; // 1 год
+  } else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+    // 2,3,4 месяца
+    switch(word) {
+      case 'год': return 'года';
+      case 'месяц': return 'месяца';
+      case 'день': return 'дня';
+      case 'час': return 'часа';
+      case 'минуту': return 'минуты';
+      case 'секунду': return 'секунды';
+      default: return word + 'а';
+    }
+  } else {
+    // 5+ лет
+    switch(word) {
+      case 'год': return 'лет';
+      case 'месяц': return 'месяцев';
+      case 'день': return 'дней';
+      case 'час': return 'часов';
+      case 'минуту': return 'минут';
+      case 'секунду': return 'секунд';
+      default: return word + '';
+    }
+  }
+}
+
 export default function CommentItem({
   comment,
   onVote,
@@ -9,6 +65,8 @@ export default function CommentItem({
   currentUser,
   onReply,
   replies = [],
+  level = 0,
+  repliesPageSize = 3,
 }) {
   const [vote, setVote] = useState(comment.user_vote);
   const [upvotes, setUpvotes] = useState(comment.upvote);
@@ -16,6 +74,7 @@ export default function CommentItem({
   const [content, setContent] = useState(comment.content);
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState("");
+  const [visibleRepliesCount, setVisibleRepliesCount] = useState(repliesPageSize);
 
   const handleUpvote = () => {
     if (vote === true) {
@@ -98,10 +157,23 @@ export default function CommentItem({
     );
   }
 
+  
+  const visibleReplies = replies.slice(0, visibleRepliesCount);
+
+  const loadMoreReplies = () => {
+    setVisibleRepliesCount((count) => count + repliesPageSize);
+  };
+  
   return (
-    <div style={{ borderBottom: '1px solid #ccc', padding: 10, marginLeft: comment.parent_comment_id ? 20 : 0 }}>
-      <div><strong>User #{comment.user_id || "?"}</strong></div>
+      <div style={{ borderBottom: '1px solid #ccc', padding: 10, marginLeft: level * 20 }}>
+      <div><strong>{comment.user?.nickname || comment.user?.username || `User #${comment.user_id}`}</strong></div>
       <div>{comment.content}</div>
+
+      <div style={{ fontSize: '0.8em', color: '#666', marginTop: 4 }}>
+        {timeAgo(comment.created_at)}{' '}
+        {(comment.updated_at && comment.updated_at !== comment.created_at) && <span>(edited)</span>}
+      </div>
+
       <div>
         <button
           style={{ color: vote === true ? 'green' : 'black' }}
@@ -152,10 +224,9 @@ export default function CommentItem({
         </div>
       )}
 
-      {/* Рекурсивный рендер вложенных ответов */}
-      {replies.length > 0 && (
+      {visibleReplies.length > 0 && (
         <div style={{ marginTop: 10 }}>
-          {replies.map((reply) => (
+          {visibleReplies.map((reply) => (
             <CommentItem
               key={reply.id}
               comment={reply}
@@ -166,9 +237,17 @@ export default function CommentItem({
               onReply={onReply}
               currentUser={currentUser}
               replies={reply.replies || []}
+              level={level + 1}
+              repliesPageSize={repliesPageSize}
             />
           ))}
         </div>
+      )}
+
+      {visibleRepliesCount < replies.length && (
+        <button onClick={loadMoreReplies} style={{ marginLeft: (level + 1) * 20 }}>
+          Показать ещё ответы ({replies.length - visibleRepliesCount})
+        </button>
       )}
     </div>
   );

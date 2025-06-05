@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import PostItem from "./components/PostItem";
 import CommentsList from "../comments/components/CommentsList";
 import AddCommentForm from "../comments/components/AddCommentForm";
+import { useRef } from "react";
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -13,6 +14,8 @@ export default function PostPage() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const limit = 20;
+  const observer = useRef();
+  const offsetRef = useRef(0);
 
   const fetchPost = useCallback(async () => {
     try {
@@ -43,7 +46,8 @@ export default function PostPage() {
         } else {
           setComments((prev) => [...prev, ...data]);
         }
-        setOffset(offsetParam + limit);
+        setOffset(offsetParam + limit); 
+        offsetRef.current = offsetParam + limit;
         setHasMore(data.length === limit);
       } catch (err) {
         console.error(err);
@@ -149,8 +153,17 @@ export default function PostPage() {
         body: JSON.stringify({ content: replyContent, post_id: postId }),
       });
       if (!res.ok) throw new Error("Ошибка при отправке ответа");
-      const newComment = await res.json();
-      setComments((prev) => [newComment, ...prev]); // Добавляем новый ответ в начало списка
+
+      const { data: newComment } = await res.json(); 
+      
+      setComments((prev) => {
+        const index = prev.findIndex((c) => c.id === parentCommentId);
+        if (index === -1) return [...prev, newComment];
+        const updated = [...prev];
+        updated.splice(index + 1, 0, newComment);
+        return updated;
+      });
+
     } catch (err) {
       alert(err.message);
     }
@@ -162,6 +175,23 @@ export default function PostPage() {
     fetchCurrentUser();
   }, [fetchPost, fetchComments, fetchCurrentUser]);
 
+  const lastCommentRef = useCallback(
+    (node) => {
+      if (!hasMore) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          fetchComments(offsetRef.current); 
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [hasMore, fetchComments]
+  );
+
+
   if (error) return <p>{error}</p>;
   if (!post) return <p>Загрузка...</p>;
 
@@ -170,7 +200,10 @@ export default function PostPage() {
       <PostItem post={post} currentUser={currentUser} />
 
       <h3>Оставить комментарий</h3>
-      <AddCommentForm postId={postId} onCommentAdded={() => fetchComments(0)} />
+      <AddCommentForm
+        postId={postId}
+        onCommentAdded={(newComment) => setComments((prev) => [newComment, ...prev])}
+      />
 
       <h3>Комментарии</h3>
       <CommentsList
@@ -180,12 +213,9 @@ export default function PostPage() {
         onDelete={onDeleteComment}
         currentUser={currentUser}
         onUpdate={handleCommentUpdate}
-        onReply={handleReply} // Передаем функцию reply
+        onReply={handleReply} 
+        lastCommentRef={lastCommentRef} 
       />
-
-      {hasMore && (
-        <button onClick={() => fetchComments(offset)}>Загрузить ещё</button>
-      )}
     </div>
   );
 }
