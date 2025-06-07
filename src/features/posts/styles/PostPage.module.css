@@ -1,0 +1,32 @@
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgb(0 0 0 / 0.1);
+}
+
+.loading,
+.error {
+  text-align: center;
+  font-size: 18px;
+  padding: 40px 0;
+  color: #888;
+}
+
+h3 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #222;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 8px;
+}
+
+/* Добавим небольшой отступ между формой и списком комментариев */
+.addCommentSection {
+  margin-bottom: 20px;
+}

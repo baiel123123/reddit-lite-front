@@ -2,23 +2,29 @@ import React from "react";
 import CommentItem from "./CommentItem";
 
 function buildCommentTree(comments) {
+  if (!comments || !Array.isArray(comments)) return [];
+
   const map = {};
   const roots = [];
 
-  comments.forEach((comment) => {
-    comment.replies = [];
-    map[comment.id] = comment;
-  });
+  comments
+    .filter(Boolean) // убираем undefined и null
+    .forEach((comment) => {
+      comment.replies = [];
+      map[comment.id] = comment;
+    });
 
-  comments.forEach((comment) => {
-    if (comment.parent_comment_id) {
-      const parent = map[comment.parent_comment_id];
-      if (parent) parent.replies.push(comment);
-      else roots.push(comment); // если родитель не найден
-    } else {
-      roots.push(comment);
-    }
-  });
+  comments
+    .filter(Boolean)
+    .forEach((comment) => {
+      if (comment.parent_comment_id) {
+        const parent = map[comment.parent_comment_id];
+        if (parent) parent.replies.push(comment);
+        else roots.push(comment); // если родитель не найден
+      } else {
+        roots.push(comment);
+      }
+    });
 
   return roots;
 }

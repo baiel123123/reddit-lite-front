@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PostVotes from "../../components/PostVotes";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import styles from "./styles/PostFeed.module.css";
 
 export default function PostFeed() {
   const [posts, setPosts] = useState([]);
@@ -41,12 +41,15 @@ export default function PostFeed() {
     loadPostsAndVotes();
   }, [sortBy, offset]);
 
-
   return (
-    <div>
-      <h2>Лента постов</h2>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Лента постов</h2>
 
-      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+      <select
+        className={styles.sortSelect}
+        value={sortBy}
+        onChange={(e) => setSortBy(e.target.value)}
+      >
         <option value="hot">Горячее</option>
         <option value="new">Новое</option>
         <option value="top">Топ</option>
@@ -55,40 +58,36 @@ export default function PostFeed() {
       {posts.map((post) => (
         <div
           key={post.id}
+          className={styles.postItem}
           onClick={() => navigate(`/post/${post.id}`)}
-          style={{
-            cursor: "pointer",
-            border: "1px solid #ccc",
-            marginBottom: 10,
-            padding: 10,
-          }}
         >
-
-          <h4>{post.title}</h4>
-          <p>{post.content}</p>
-          <p style={{ fontSize: 12, color: "#777" }}>
-            Автор: {post.user.username}
-          </p>
-          <p>Subreddit: <Link to={`/subreddit/${post.subreddit.id}`} 
-                        style={{ color: "blue", textDecoration: "underline" }} 
-                        onClick={(e) => e.stopPropagation()}
-                        >
-            {post.subreddit.name}
-          </Link></p>
+          <h4 className={styles.postTitle}>{post.title}</h4>
+          <p className={styles.postContent}>{post.content}</p>
+          <div className={styles.postMeta}>
+            <span>Автор: {post.user.username}</span>
+            <span>
+              Subreddit:{" "}
+              <Link
+                to={`/subreddit/${post.subreddit.id}`}
+                className={styles.subredditLink}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {post.subreddit.name}
+              </Link>
+            </span>
+          </div>
           <PostVotes post={post} />
         </div>
       ))}
 
-      <div style={{ marginTop: 20 }}>
+      <div className={styles.pagination}>
         <button
           onClick={() => setOffset((prev) => Math.max(prev - limit, 0))}
           disabled={offset === 0}
         >
           Назад
         </button>
-        <button onClick={() => setOffset((prev) => prev + limit)} style={{ marginLeft: 10 }}>
-          Далее
-        </button>
+        <button onClick={() => setOffset((prev) => prev + limit)}>Далее</button>
       </div>
     </div>
   );

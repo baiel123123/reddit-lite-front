@@ -3,36 +3,34 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import LogoutButton from "./LogoutButton";
 
-function Navbar() {
+export default function Navbar() {
   const { user } = useContext(AuthContext);
 
   return (
     <nav style={{
-      padding: "10px",
-      background: "#eee",
+      width: "220px",
+      background: "#fff",
+      borderRight: "1px solid #ddd",
+      padding: "20px",
       display: "flex",
-      gap: "10px",
-      alignItems: "center"
+      flexDirection: "column",
+      gap: "15px",
+      height: "100vh",
+      position: "sticky",
+      top: 0
     }}>
-      <Link to="/">Главная</Link>
+      <Link to="/" style={{ fontWeight: "bold", color: "#ff4500", fontSize: "24px" }}>Reddit Lite</Link>
 
       {user ? (
         <>
           <Link to="/my-profile">Мой профиль</Link>
           <Link to="/settings">Настройки</Link>
-          <Link to="/search">Поиск пользователей</Link>
-
-          <Link to="/create-post" style={{ marginLeft: "auto" }}>
-            <button style={{ padding: "6px 12px", cursor: "pointer" }}>
-              Создать пост
-            </button>
-          </Link>
+          <Link to="/search">Поиск</Link>
+          <Link to="/create-post">Создать пост</Link>
           <Link to="/subreddits">Сообщества</Link>
-
           {(user.role_id === 2 || user.role_id === 3) && (
-            <Link to="/admin-tools">Admin Tools</Link>
+            <Link to="/admin-tools">Admin</Link>
           )}
-
           <LogoutButton />
         </>
       ) : (
@@ -44,5 +42,3 @@ function Navbar() {
     </nav>
   );
 }
-
-export default Navbar;

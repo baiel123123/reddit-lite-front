@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserProfile from "../features/users/components/UserProfile";
 import { Link, useNavigate } from "react-router-dom";
 import Upvote from "../components/PostVotes";
+import "./styles/MyProfile.module.css";
 
 export default function MyProfile() {
   const [user, setUser] = useState(null);
@@ -67,37 +68,37 @@ export default function MyProfile() {
   if (!user) return <p>Загрузка...</p>;
 
   return (
-    <div>
+    <div className="my-profile-container">
       <UserProfile user={user} currentUser={user} />
-      <p>
-        <strong>Обновить профиль:</strong> {user?.role}
-      </p>
-      <Link to="/update-user">
-        <button>Обновить</button>
-      </Link>
+      <div className="user-update-section">
+        <p>
+          <strong>Обновить профиль:</strong> {user?.role}
+        </p>
+        <Link to="/update-user">
+          <button>Обновить</button>
+        </Link>
+      </div>
 
       <h3>Мои посты</h3>
       {posts.length === 0 ? (
         <p>Постов пока нет</p>
       ) : (
-        <ul>
+        <ul className="posts-list">
           {posts.map((post) => (
-            <li key={post.id} style={{ marginBottom: "10px", listStyle: "none" }}>
+            <li key={post.id}>
               <div
+                className="post-content"
                 onClick={() => navigate(`/post/${post.id}`)}
-                style={{ cursor: "pointer" }}
               >
-                <h4>{post.title}</h4> 
+                <h4>{post.title}</h4>
                 <Upvote post={post} />
               </div>
-
-              <div>
+              <div className="post-actions">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/edit-post/${post.id}`);
                   }}
-                  style={{ marginRight: "10px" }}
                 >
                   Редактировать
                 </button>
@@ -106,7 +107,6 @@ export default function MyProfile() {
                     e.stopPropagation();
                     handleDelete(post.id);
                   }}
-                  style={{ color: "red" }}
                 >
                   Удалить
                 </button>

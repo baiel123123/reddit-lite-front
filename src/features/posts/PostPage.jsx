@@ -4,6 +4,7 @@ import PostItem from "./components/PostItem";
 import CommentsList from "../comments/components/CommentsList";
 import AddCommentForm from "../comments/components/AddCommentForm";
 import { useRef } from "react";
+import styles from "./styles/PostPage.module.css";
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -192,18 +193,20 @@ export default function PostPage() {
   );
 
 
-  if (error) return <p>{error}</p>;
-  if (!post) return <p>Загрузка...</p>;
+  if (error) return <p className={styles.error}>{error}</p>;
+  if (!post) return <p className={styles.loading}>Загрузка...</p>;
 
   return (
-    <div>
+    <div className={styles.container}>
       <PostItem post={post} currentUser={currentUser} />
 
       <h3>Оставить комментарий</h3>
-      <AddCommentForm
-        postId={postId}
-        onCommentAdded={(newComment) => setComments((prev) => [newComment, ...prev])}
-      />
+      <div className={styles.addCommentSection}>
+        <AddCommentForm
+          postId={postId}
+          onCommentAdded={(newComment) => setComments((prev) => [newComment, ...prev])}
+        />
+      </div>
 
       <h3>Комментарии</h3>
       <CommentsList
@@ -213,8 +216,8 @@ export default function PostPage() {
         onDelete={onDeleteComment}
         currentUser={currentUser}
         onUpdate={handleCommentUpdate}
-        onReply={handleReply} 
-        lastCommentRef={lastCommentRef} 
+        onReply={handleReply}
+        lastCommentRef={lastCommentRef}
       />
     </div>
   );

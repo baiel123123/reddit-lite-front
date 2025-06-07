@@ -1,12 +1,15 @@
 import React from "react";
 import PostFeed from "../features/posts/PostFeed";
+import styles from "./styles/Home.module.css";
 
 export default function Home() {
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Главная</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Главная</h1>
 
-      <PostFeed />
+      <div className={styles.postFeedWrapper}>
+        <PostFeed />
+      </div>
     </div>
   );
 }
