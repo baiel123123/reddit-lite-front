@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import PostVotes from "../../../components/PostVotes";
 
 export default function PostItem({ post, currentUser, onDelete, onVoteUpdate }) {
-  console.log("Post:", post);
   const navigate = useNavigate();
   const isOwner = currentUser?.id === post.user_id;
   const isAdmin = currentUser?.role_id === 2 || currentUser?.role_id === 3;

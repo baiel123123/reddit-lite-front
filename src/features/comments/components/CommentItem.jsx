@@ -17,7 +17,6 @@ function timeAgo(dateString) {
   for (let i = 0; i < intervals.length; i++) {
     const interval = Math.floor(seconds / intervals[i].seconds);
     if (interval >= 1) {
-      // Правильное склонение слова
       const label = intervals[i].label;
       const pluralized = pluralize(label, interval);
       return `${interval} ${pluralized} назад`;
@@ -29,226 +28,175 @@ function timeAgo(dateString) {
 function pluralize(word, count) {
   const mod10 = count % 10;
   const mod100 = count % 100;
-  if (mod10 === 1 && mod100 !== 11) {
-    return word; // 1 год
-  } else if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
-    // 2,3,4 месяца
-    switch(word) {
-      case 'год': return 'года';
-      case 'месяц': return 'месяца';
-      case 'день': return 'дня';
-      case 'час': return 'часа';
-      case 'минуту': return 'минуты';
-      case 'секунду': return 'секунды';
-      default: return word + 'а';
-    }
-  } else {
-    // 5+ лет
-    switch(word) {
-      case 'год': return 'лет';
-      case 'месяц': return 'месяцев';
-      case 'день': return 'дней';
-      case 'час': return 'часов';
-      case 'минуту': return 'минут';
-      case 'секунду': return 'секунд';
-      default: return word + '';
-    }
+
+  if (mod10 === 1 && mod100 !== 11) return word;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+    return {
+      'год': 'года',
+      'месяц': 'месяца',
+      'день': 'дня',
+      'час': 'часа',
+      'минуту': 'минуты',
+      'секунду': 'секунды',
+    }[word] || word;
   }
+  return {
+    'год': 'лет',
+    'месяц': 'месяцев',
+    'день': 'дней',
+    'час': 'часов',
+    'минуту': 'минут',
+    'секунду': 'секунд',
+  }[word] || word;
 }
 
-export default function CommentItem({
+const CommentItem = ({
   comment,
   onVote,
   onRemoveVote,
   onDelete,
   onUpdate,
-  currentUser,
   onReply,
-  replies = [],
+  currentUser,
   level = 0,
-  repliesPageSize = 3,
-}) {
-  const [vote, setVote] = useState(comment.user_vote);
-  const [upvotes, setUpvotes] = useState(comment.upvote);
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(comment.content);
   const [isReplying, setIsReplying] = useState(false);
-  const [replyContent, setReplyContent] = useState("");
-  const [visibleRepliesCount, setVisibleRepliesCount] = useState(repliesPageSize);
+  const [replyContent, setReplyContent] = useState('');
 
   const handleUpvote = () => {
-    if (vote === true) {
-      onRemoveVote(comment.id);
-      setVote(null);
-      setUpvotes(upvotes - 1);
-    } else {
-      onVote(comment.id, true);
-      setVote(true);
-      setUpvotes(vote === false ? upvotes + 2 : upvotes + 1);
-    }
+    comment.user_vote === true ? onRemoveVote(comment.id) : onVote(comment.id, true);
   };
 
   const handleDownvote = () => {
-    if (vote === false) {
-      onRemoveVote(comment.id);
-      setVote(null);
-      setUpvotes(upvotes + 1);
-    } else {
-      onVote(comment.id, false);
-      setVote(false);
-      setUpvotes(vote === true ? upvotes - 2 : upvotes - 1);
-    }
+    comment.user_vote === false ? onRemoveVote(comment.id) : onVote(comment.id, false);
   };
 
-  const handleDelete = () => {
-    if (window.confirm("Удалить комментарий?")) {
-      onDelete(comment.id);
-    }
-  };
-
-  const handleSave = async () => {
-    if (!content.trim()) {
-      alert("Комментарий не может быть пустым");
-      return;
-    }
-    try {
-      const res = await fetch(`http://localhost:8000/comments/${comment.id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
-      });
-      if (!res.ok) throw new Error("Ошибка при обновлении комментария");
-      const updatedComment = await res.json();
-      onUpdate(updatedComment);
-      setIsEditing(false);
-    } catch (err) {
-      alert(err.message);
-    }
+  const handleEditSave = async () => {
+    const res = await fetch(`http://localhost:8000/comments/${comment.id}`, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
+    if (!res.ok) return;
+    const updatedComment = await res.json();
+    onUpdate(updatedComment);
+    setIsEditing(false);
   };
 
   const handleReplySubmit = async () => {
-    if (!replyContent.trim()) {
-      alert("Комментарий не может быть пустым");
-      return;
-    }
     await onReply(comment.id, replyContent);
-    setReplyContent("");
+    setReplyContent('');
     setIsReplying(false);
   };
 
   if (isEditing) {
     return (
-      <div style={{ borderBottom: '1px solid #ccc', padding: 10 }}>
+      <div style={{ marginLeft: level * 20 }}>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={3}
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
         />
-        <button onClick={handleSave}>Сохранить</button>
-        <button
-          onClick={() => { setIsEditing(false); setContent(comment.content); }}
-          style={{ marginLeft: 8 }}
-        >
-          Отмена
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button onClick={handleEditSave}>Сохранить</button>
+          <button
+            onClick={() => {
+              setIsEditing(false);
+              setContent(comment.content);
+            }}
+          >
+            Отмена
+          </button>
+        </div>
       </div>
     );
   }
 
-  
-  const visibleReplies = replies.slice(0, visibleRepliesCount);
-
-  const loadMoreReplies = () => {
-    setVisibleRepliesCount((count) => count + repliesPageSize);
-  };
-  
   return (
-      <div style={{ borderBottom: '1px solid #ccc', padding: 10, marginLeft: level * 20 }}>
-      <div><strong>{comment.user?.nickname || comment.user?.username || `User #${comment.user_id}`}</strong></div>
-      <div>{comment.content}</div>
-
-      <div style={{ fontSize: '0.8em', color: '#666', marginTop: 4 }}>
-        {timeAgo(comment.created_at)}{' '}
-        {(comment.updated_at && comment.updated_at !== comment.created_at) && <span>(edited)</span>}
+    <div
+      style={{
+        marginLeft: level * 20,
+        padding: '10px 0',
+        borderBottom: '1px solid #eee',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '6px' }}>
+        <strong style={{ marginRight: '8px' }}>
+          {comment.user?.nickname || comment.user?.username}
+        </strong>
+        <span style={{ color: '#666', fontSize: '0.85em' }}>
+          {timeAgo(comment.created_at)}
+        </span>
       </div>
 
-      <div>
-        <button
-          style={{ color: vote === true ? 'green' : 'black' }}
-          onClick={handleUpvote}
-        >
-          ▲ Upvote
-        </button>
-        <button
-          style={{ color: vote === false ? 'red' : 'black' }}
-          onClick={handleDownvote}
-        >
-          ▼ Downvote
-        </button>
-        <span style={{ marginLeft: 10 }}>Votes: {upvotes}</span>
-        {(String(currentUser?.id) === String(comment.user_id) || [2, 3].includes(currentUser?.role_id)) && (
+      <div style={{ marginBottom: '10px' }}>{comment.content}</div>
+
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <button
+            onClick={handleUpvote}
+            style={{ color: comment.user_vote === true ? '#4CAF50' : '#666' }}
+          >
+            ▲
+          </button>
+          <span>{comment.upvote}</span>
+          <button
+            onClick={handleDownvote}
+            style={{ color: comment.user_vote === false ? '#f44336' : '#666' }}
+          >
+            ▼
+          </button>
+        </div>
+
+        <button onClick={() => setIsReplying(!isReplying)}>Ответить</button>
+
+        {(currentUser?.id === comment.user_id || [2, 3].includes(currentUser?.role_id)) && (
           <>
-            <button
-              onClick={() => setIsEditing(true)}
-              style={{ marginLeft: 10 }}
-            >
-              Редактировать
-            </button>
-            <button
-              onClick={handleDelete}
-              style={{ marginLeft: 10, color: "red" }}
-            >
-              Удалить
-            </button>
+            <button onClick={() => setIsEditing(true)}>Редактировать</button>
+            <button onClick={() => onDelete(comment.id)}>Удалить</button>
           </>
         )}
-        <button
-          onClick={() => setIsReplying(!isReplying)}
-          style={{ marginLeft: 10 }}
-        >
-          {isReplying ? "Отмена" : "Ответить"}
-        </button>
       </div>
 
       {isReplying && (
-        <div style={{ marginTop: 8 }}>
+        <div>
           <textarea
-            rows={3}
-            style={{ width: "100%" }}
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
+            rows={3}
+            style={{ width: '100%' }}
+            placeholder="Напишите ваш ответ..."
           />
-          <button onClick={handleReplySubmit}>Отправить ответ</button>
+          <button onClick={handleReplySubmit} disabled={!replyContent.trim()}>
+            Отправить
+          </button>
         </div>
       )}
 
-      {visibleReplies.length > 0 && (
-        <div style={{ marginTop: 10 }}>
-          {visibleReplies.map((reply) => (
+      {/* Рекурсивный рендер детей из comment.children */}
+      {comment.children && comment.children.length > 0 && (
+        <div style={{ marginTop: '10px' }}>
+          {comment.children.map((child) => (
             <CommentItem
-              key={reply.id}
-              comment={reply}
+              key={child.id}
+              comment={child}
               onVote={onVote}
               onRemoveVote={onRemoveVote}
               onDelete={onDelete}
               onUpdate={onUpdate}
               onReply={onReply}
               currentUser={currentUser}
-              replies={reply.replies || []}
               level={level + 1}
-              repliesPageSize={repliesPageSize}
             />
           ))}
         </div>
       )}
-
-      {visibleRepliesCount < replies.length && (
-        <button onClick={loadMoreReplies} style={{ marginLeft: (level + 1) * 20 }}>
-          Показать ещё ответы ({replies.length - visibleRepliesCount})
-        </button>
-      )}
     </div>
   );
-}
+};
+
+export default CommentItem;
