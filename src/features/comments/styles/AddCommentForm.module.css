@@ -1,0 +1,56 @@
+.form {
+  margin-bottom: 20px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 16px;
+  resize: vertical;
+  margin-bottom: 10px;
+  background: #625656;
+}
+
+.button {
+  background-color: #0079d3;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #005bb5;
+}
+
+/* Reddit-подобная кнопка */
+.buttonReddit {
+  background-color: #ff4500;
+  background-image: linear-gradient(180deg, #000000, #000000);
+  border: none;
+  border-radius: 9999px; /* полностью округлённая форма */
+  color: #ffffff;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+}
+
+.buttonReddit:hover {
+  background-color: #e03d00;
+  background-image: linear-gradient(180deg, #e03d00, #c73711);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.buttonReddit:active {
+  transform: translateY(1px);
+}

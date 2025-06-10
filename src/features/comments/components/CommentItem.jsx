@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import styles from '../styles/CommentItem.module.css';
 
 function timeAgo(dateString) {
   const now = new Date();
@@ -18,8 +19,7 @@ function timeAgo(dateString) {
     const interval = Math.floor(seconds / intervals[i].seconds);
     if (interval >= 1) {
       const label = intervals[i].label;
-      const pluralized = pluralize(label, interval);
-      return `${interval} ${pluralized} назад`;
+      return `${interval} ${pluralize(label, interval)} назад`;
     }
   }
   return 'только что';
@@ -64,6 +64,20 @@ const CommentItem = ({
   const [content, setContent] = useState(comment.content);
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
+  const [showActionsMenu, setShowActionsMenu] = useState(false);
+  
+  const actionsMenuRef = useRef(null);
+  
+  // Скрываем меню при клике вне его области
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (actionsMenuRef.current && !actionsMenuRef.current.contains(e.target)) {
+        setShowActionsMenu(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   const handleUpvote = () => {
     comment.user_vote === true ? onRemoveVote(comment.id) : onVote(comment.id, true);
@@ -92,16 +106,17 @@ const CommentItem = ({
     setIsReplying(false);
   };
 
+  // Режим редактирования комментария
   if (isEditing) {
     return (
-      <div style={{ marginLeft: level * 20 }}>
+      <div style={{ marginLeft: level * 20, padding: '10px', background: '#fff', borderRadius: '4px' }}>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={3}
-          style={{ width: '100%' }}
+          style={{ width: '100%', border: '1px solid #ccc', borderRadius: '4px', padding: '8px' }}
         />
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', marginTop: '5px' }}>
           <button onClick={handleEditSave}>Сохранить</button>
           <button
             onClick={() => {
@@ -117,67 +132,97 @@ const CommentItem = ({
   }
 
   return (
-    <div
-      style={{
-        marginLeft: level * 20,
-        padding: '10px 0',
-        borderBottom: '1px solid #eee',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '6px' }}>
-        <strong style={{ marginRight: '8px' }}>
-          {comment.user?.nickname || comment.user?.username}
-        </strong>
-        <span style={{ color: '#666', fontSize: '0.85em' }}>
-          {timeAgo(comment.created_at)}
-        </span>
+    <div className={styles.commentContainer}>
+      <div className={styles.commentHeader}>
+        <div className={styles.authorInfo}>
+          <strong className={styles.authorName}>
+            {comment.user?.nickname || comment.user?.username}
+          </strong>
+          <span className={styles.commentTime}>{timeAgo(comment.created_at)}</span>
+        </div>
+        <div className={styles.actionsMenuWrapper} ref={actionsMenuRef}>
+          <button
+            onClick={() => setShowActionsMenu(!showActionsMenu)}
+            className={styles.actionsMenuButton}
+          >
+            ⋮
+          </button>
+          {showActionsMenu &&
+            (currentUser?.id === comment.user_id ||
+              [2, 3].includes(currentUser?.role_id)) && (
+              <div className={styles.actionsDropdown}>
+                <button
+                  onClick={() => {
+                    setIsEditing(true);
+                    setShowActionsMenu(false);
+                  }}
+                  className={styles.dropdownButton}
+                >
+                  Редактировать
+                </button>
+                <button
+                  onClick={() => {
+                    onDelete(comment.id);
+                    setShowActionsMenu(false);
+                  }}
+                  className={styles.dropdownButton}
+                >
+                  Удалить
+                </button>
+              </div>
+            )}
+        </div>
       </div>
-
-      <div style={{ marginBottom: '10px' }}>{comment.content}</div>
-
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+      <div className={styles.commentContent}>{comment.content}</div>
+      <div className={styles.actionBar}>
+        <div className={styles.voteGroup}>
           <button
             onClick={handleUpvote}
-            style={{ color: comment.user_vote === true ? '#4CAF50' : '#666' }}
+            className={styles.voteButton}
+            style={{
+              color: comment.user_vote === true ? "#4CAF50" : "#888",
+            }}
           >
             ▲
           </button>
           <span>{comment.upvote}</span>
           <button
             onClick={handleDownvote}
-            style={{ color: comment.user_vote === false ? '#f44336' : '#666' }}
+            className={styles.voteButton}
+            style={{
+              color: comment.user_vote === false ? "#f44336" : "#888",
+            }}
           >
             ▼
           </button>
         </div>
-
-        <button onClick={() => setIsReplying(!isReplying)}>Ответить</button>
-
-        {(currentUser?.id === comment.user_id || [2, 3].includes(currentUser?.role_id)) && (
-          <>
-            <button onClick={() => setIsEditing(true)}>Редактировать</button>
-            <button onClick={() => onDelete(comment.id)}>Удалить</button>
-          </>
-        )}
+        <button
+          onClick={() => setIsReplying(!isReplying)}
+          className={styles.replyButton}
+        >
+          Ответить
+        </button>
       </div>
 
       {isReplying && (
-        <div>
+        <div className={styles.replySection}>
           <textarea
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
-            rows={3}
-            style={{ width: '100%' }}
+            rows="3"
+            className={styles.replyTextarea}
             placeholder="Напишите ваш ответ..."
-          />
-          <button onClick={handleReplySubmit} disabled={!replyContent.trim()}>
+          ></textarea>
+          <button
+            onClick={handleReplySubmit}
+            disabled={!replyContent.trim()}
+            className={styles.submitReplyButton}
+          >
             Отправить
           </button>
         </div>
       )}
 
-      {/* Рекурсивный рендер детей из comment.children */}
       {comment.children && comment.children.length > 0 && (
         <div style={{ marginTop: '10px' }}>
           {comment.children.map((child) => (

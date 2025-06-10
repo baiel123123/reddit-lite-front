@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef} from "react";
 import { useParams } from "react-router-dom";
 import PostItem from "./components/PostItem";
 import CommentsList from "../comments/components/CommentsList";
@@ -89,7 +89,7 @@ export default function PostPage() {
     }
   };
 
-  // Голосование за комментарий
+
   const handleCommentVote = async (commentId, isUpvote) => {
     try {
       const res = await fetch(
@@ -98,23 +98,14 @@ export default function PostPage() {
       );
       if (!res.ok) throw new Error("Ошибка голосования");
 
-      setFlatComments((prev) =>
-        prev.map((c) => {
-          if (c.id !== commentId) return c;
+      const voteResponse = await res.json();
+      console.log("Ответ сервера после голосования:", voteResponse);
 
-          // Если пользователь уже проголосовал
-          let newUpvote = c.upvote;
-          if (c.user_vote === null) {
-            newUpvote += isUpvote ? 1 : -1;
-          } else if (c.user_vote !== isUpvote) {
-            newUpvote += isUpvote ? 2 : -2;
-          }
-
-          return {
-            ...c,
-            upvote: newUpvote,
-            user_vote: isUpvote,
-          };
+      setFlatComments((prev) => 
+        updateNestedComments(prev, { 
+          id: commentId, 
+          upvote: voteResponse.upvotes, 
+          user_vote: isUpvote 
         })
       );
     } catch (err) {
@@ -122,44 +113,55 @@ export default function PostPage() {
     }
   };
 
-  // Удаление голоса
+
   const handleRemoveCommentVote = async (commentId) => {
     try {
       const res = await fetch(
         `http://localhost:8000/comments/delete_upvote/${commentId}`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
+        { method: "POST", credentials: "include" }
       );
       if (!res.ok) throw new Error("Ошибка удаления голоса");
 
       setFlatComments((prev) =>
-        prev.map((c) => {
-          if (c.id !== commentId) return c;
-
-          const newUpvote = c.user_vote === true ? c.upvote - 1 : c.upvote + 1;
-
-          return {
-            ...c,
-            upvote: newUpvote,
-            user_vote: null,
-          };
-        })
+        updateNestedComments(prev, { id: commentId, user_vote: null })
       );
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Обновление комментария после редактирования
-  const handleCommentUpdate = (updatedComment) => {
-    setFlatComments((prev) =>
-      prev.map((c) => (c.id === updatedComment.id ? updatedComment : c))
-    );
+  const updateNestedComments = (comments, updatedComment) => {
+    return comments.map((comment) => {
+      if (comment.id === updatedComment.id) {
+        let newUpvote = updatedComment.upvote;
+
+        // Если голос удаляется, корректируем счетчик
+        if (updatedComment.user_vote === null) {
+          newUpvote = comment.user_vote === true ? comment.upvote - 1 : comment.upvote + 1;
+        }
+
+        return {
+          ...comment,
+          ...updatedComment,
+          upvote: newUpvote, // Корректируем upvote при отмене
+          children: comment.children || updatedComment.children, // сохраняем вложенные комментарии
+        };
+      }
+      if (comment.children && comment.children.length > 0) {
+        return { 
+          ...comment, 
+          children: updateNestedComments(comment.children, updatedComment) 
+        };
+      }
+      return comment;
+    });
   };
 
-  // Ответ на комментарий
+
+  const handleCommentUpdate = (updatedComment) => {
+    setFlatComments((prev) => updateNestedComments(prev, updatedComment));
+  };
+
   const handleReply = async (parentId, replyContent) => {
     try {
       const res = await fetch(
@@ -219,9 +221,22 @@ export default function PostPage() {
       <div className={styles.addCommentSection}>
         <AddCommentForm
           postId={postId}
-          onCommentAdded={(newComment) =>
-            setFlatComments((prev) => [newComment, ...prev])
-          }
+          onCommentAdded={(newComment, tempId) => {
+            if (tempId && newComment) {
+              // Заменяем временный комментарий на настоящий
+              setFlatComments((prev) =>
+                prev.map((comment) => (comment.id === tempId ? newComment : comment))
+              );
+            } else if (tempId && newComment === null) {
+              // Если произошла ошибка — удаляем временный комментарий
+              setFlatComments((prev) =>
+                prev.filter((comment) => comment.id !== tempId)
+              );
+            } else {
+              // Если вызывается без tempId (например, при первой загрузке) — просто добавляем комментарий
+              setFlatComments((prev) => [newComment, ...prev]);
+            }
+          }}
         />
       </div>
 
