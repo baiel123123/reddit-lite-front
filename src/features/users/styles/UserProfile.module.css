@@ -1,0 +1,94 @@
+.profileContainer {
+  background-color: #1c1c1c;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  color: #e8e8e8;
+}
+
+/* Заголовок профиля */
+.profileHeader {
+  text-align: center;
+  border-bottom: 1px solid #444;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.username {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.status {
+  font-size: 16px;
+  color: #bbb;
+}
+
+/* Блок основной информации */
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.infoBlock {
+  display: flex;
+  justify-content: space-between;
+  background: #292929;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+}
+
+.fullWidth {
+  flex-direction: column;
+}
+
+.label {
+  font-weight: bold;
+  color: #ccc;
+}
+
+.value {
+  font-size: 16px;
+}
+
+/* Блок дополнительной информации */
+.profileMeta {
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Блок админской информации */
+.adminInfo {
+  margin-top: 20px;
+  border-top: 1px solid #444;
+  padding-top: 12px;
+  color: #ff4500;
+}
+
+.updateSection {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.updateButton {
+  background-color: #0079d3;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.updateButton:hover {
+  background-color: #005bb5;
+}

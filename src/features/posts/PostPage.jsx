@@ -223,17 +223,14 @@ export default function PostPage() {
           postId={postId}
           onCommentAdded={(newComment, tempId) => {
             if (tempId && newComment) {
-              // Заменяем временный комментарий на настоящий
               setFlatComments((prev) =>
                 prev.map((comment) => (comment.id === tempId ? newComment : comment))
               );
             } else if (tempId && newComment === null) {
-              // Если произошла ошибка — удаляем временный комментарий
               setFlatComments((prev) =>
                 prev.filter((comment) => comment.id !== tempId)
               );
             } else {
-              // Если вызывается без tempId (например, при первой загрузке) — просто добавляем комментарий
               setFlatComments((prev) => [newComment, ...prev]);
             }
           }}

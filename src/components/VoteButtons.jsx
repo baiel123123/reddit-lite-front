@@ -1,34 +1,23 @@
 import React from "react";
+import styles from "./styles/votebuttons.module.css"
 
 export default function VoteButtons({ vote, upvotes, onUpvote, onDownvote }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+    <div className={styles.voteContainer}>
       <button
         onClick={onUpvote}
-        style={{
-          color: vote === true ? "green" : "black",
-          fontWeight: vote === true ? "bold" : "normal",
-          cursor: "pointer",
-          background: "none",
-          border: "none",
-        }}
+        className={`${styles.voteButton} ${vote === true ? styles.upvoted : styles.upvote}`}
         aria-label="Upvote"
       >
-        ▲ Upvote
+        ▲
       </button>
       <span>{upvotes}</span>
       <button
         onClick={onDownvote}
-        style={{
-          color: vote === false ? "red" : "black",
-          fontWeight: vote === false ? "bold" : "normal",
-          cursor: "pointer",
-          background: "none",
-          border: "none",
-        }}
+        className={`${styles.voteButton} ${vote === false ? styles.downvoted : styles.downvote}`}
         aria-label="Downvote"
       >
-        ▼ Downvote
+        ▼
       </button>
     </div>
   );

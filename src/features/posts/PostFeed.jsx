@@ -65,7 +65,6 @@ export default function PostFeed() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Лента постов</h2>
 
       <select
         className={styles.sortSelect}
@@ -105,7 +104,7 @@ export default function PostFeed() {
       {loading && <p>Загрузка...</p>}
       {!hasMore && <p>Больше постов нет</p>}
 
-      <div ref={bottomRef} style={{ height: "1px" }} /> {/* триггер */}
+      <div ref={bottomRef} style={{ height: "1px" }} />
     </div>
   );
 }

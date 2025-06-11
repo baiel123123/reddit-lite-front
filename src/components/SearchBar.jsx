@@ -7,23 +7,22 @@ export default function SearchBar() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Переход на страницу поиска с query в параметрах
     navigate(`/search?query=${encodeURIComponent(query)}`);
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit} 
+    <form
+      onSubmit={handleSubmit}
       style={{
         display: "flex",
         padding: "8px 20px",
-        backgroundColor: "#fff",
-        borderBottom: "1px solid #ccc",
+        backgroundColor: "#1c1c1c",         // Тёмный фон для формы
+        borderBottom: "1px solid #444",       // Тёмная нижняя граница
         position: "fixed",
         top: 0,
         width: "100%",
         zIndex: 1000,
-        boxShadow: "0 1px 5px rgba(0,0,0,0.1)"
+        boxShadow: "0 1px 5px rgba(0,0,0,0.5)"
       }}
     >
       <input
@@ -34,13 +33,15 @@ export default function SearchBar() {
         style={{
           flex: 1,
           padding: "8px 12px",
-          border: "1px solid #ccc",
+          border: "1px solid #444",         // Тёмная рамка для поля ввода
           borderRadius: "4px 0 0 4px",
-          fontSize: "16px"
+          fontSize: "16px",
+          backgroundColor: "#292929",         // Ещё более тёмный фон для инпута
+          color: "#e8e8e8",                   // Светлый текст
         }}
       />
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         style={{
           padding: "8px 16px",
           backgroundColor: "#ff4500",

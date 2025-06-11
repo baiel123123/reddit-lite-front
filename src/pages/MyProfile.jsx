@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
-import UserProfile from "../features/users/components/UserProfile";
 import { Link, useNavigate } from "react-router-dom";
+import UserProfile from "../features/users/components/UserProfile";
 import Upvote from "../components/PostVotes";
-import "./styles/MyProfile.module.css";
+import UpdateUserModal from "../features/users/components/UpdateUser";
+import CommunityModal from "../features/subreddits/components/CommunityModal";
+import styles from "./styles/MyProfile.module.css";
+
+const API_URL = "http://localhost:8000/subreddit";
 
 export default function MyProfile() {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [subreddits, setSubreddits] = useState([]);
+  const [activeTab, setActiveTab] = useState("posts"); // "posts" или "subreddits"
   const [error, setError] = useState("");
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [showCommunityModal, setShowCommunityModal] = useState(false);
+  const [editingCommunity, setEditingCommunity] = useState(null);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -28,9 +36,10 @@ export default function MyProfile() {
         const postsData = await postsRes.json();
 
         const ids = postsData.map((p) => p.id).join(",");
-        const voteRes = await fetch(`http://localhost:8000/posts/votes/by-user?ids=${ids}`, {
-          credentials: "include",
-        });
+        const voteRes = await fetch(
+          `http://localhost:8000/posts/votes/by-user?ids=${ids}`,
+          { credentials: "include" }
+        );
         const votes = await voteRes.json();
 
         const postsWithVotes = postsData.map((post) => ({
@@ -48,6 +57,26 @@ export default function MyProfile() {
     fetchCurrentUser();
   }, []);
 
+  // После загрузки пользователя подгружаем сообщества
+  useEffect(() => {
+    const fetchMySubreddits = async () => {
+      if (!user) return;
+      try {
+        const params = new URLSearchParams({ created_by_id: user.id });
+        const res = await fetch(`${API_URL}/find/?${params.toString()}`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Ошибка при загрузке сообществ");
+        const data = await res.json();
+        setSubreddits(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchMySubreddits();
+  }, [user]);
+
   const handleDelete = async (postId) => {
     if (!window.confirm("Вы уверены, что хотите удалить этот пост?")) return;
 
@@ -58,62 +87,195 @@ export default function MyProfile() {
       });
       if (!res.ok) throw new Error("Ошибка при удалении поста");
 
-      setPosts(posts.filter((post) => post.id !== postId));
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
     } catch (err) {
       alert(err.message);
     }
   };
 
-  if (error) return <p>{error}</p>;
-  if (!user) return <p>Загрузка...</p>;
+  const handleProfileUpdate = (updatedUser) => {
+    setUser(updatedUser);
+  };
+
+  // Функция сохранения сообщества, вызываемая из CommunityModal
+  const handleCommunitySave = async (form, id) => {
+    try {
+      const url = id ? `${API_URL}/${id}` : `${API_URL}/create/`;
+      const method = id ? "PUT" : "POST";
+      // В режиме обновления отправляем только описание
+      const bodyData = id ? { description: form.description } : form;
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(bodyData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.detail || "Ошибка при сохранении");
+      }
+      // Обновляем список сообществ
+      const params = new URLSearchParams({ created_by_id: user.id });
+      const subRes = await fetch(`${API_URL}/find/?${params.toString()}`, {
+        credentials: "include",
+      });
+      const data = await subRes.json();
+      setSubreddits(data);
+      setShowCommunityModal(false);
+      setEditingCommunity(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSubDelete = async (id) => {
+    if (!window.confirm("Удалить сообщество?")) return;
+    try {
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Ошибка при удалении");
+      // Обновляем список сообществ
+      const params = new URLSearchParams({ created_by_id: user.id });
+      const subRes = await fetch(`${API_URL}/find/?${params.toString()}`, {
+        credentials: "include",
+      });
+      const data = await subRes.json();
+      setSubreddits(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (error) return <p className={styles.error}>{error}</p>;
+  if (!user) return <p className={styles.loading}>Загрузка...</p>;
 
   return (
-    <div className="my-profile-container">
-      <UserProfile user={user} currentUser={user} />
-      <div className="user-update-section">
-        <p>
-          <strong>Обновить профиль:</strong> {user?.role}
-        </p>
-        <Link to="/update-user">
-          <button>Обновить</button>
-        </Link>
+    <div className={styles.myProfileContainer}>
+      <UserProfile
+        user={user}
+        currentUser={user}
+        onUpdateClick={() => setShowUserModal(true)}
+      />
+
+      {showUserModal && (
+        <UpdateUserModal
+          user={user}
+          onClose={() => setShowUserModal(false)}
+          onUpdate={handleProfileUpdate}
+        />
+      )}
+
+      {/* Вкладки */}
+      <div className={styles.tabs}>
+        <button
+          className={activeTab === "posts" ? styles.activeTab : ""}
+          onClick={() => setActiveTab("posts")}
+        >
+          Мои посты
+        </button>
+        <button
+          className={activeTab === "subreddits" ? styles.activeTab : ""}
+          onClick={() => setActiveTab("subreddits")}
+        >
+          Мои сообщества
+        </button>
       </div>
 
-      <h3>Мои посты</h3>
-      {posts.length === 0 ? (
-        <p>Постов пока нет</p>
+      {activeTab === "posts" ? (
+        <div>
+          <h3 className={styles.postsTitle}>Мои посты</h3>
+          {posts.length === 0 ? (
+            <p className={styles.noPosts}>Постов пока нет</p>
+          ) : (
+            <ul className={styles.postsList}>
+              {posts.map((post) => (
+                <li key={post.id} className={styles.postItem}>
+                  <div
+                    className={styles.postContent}
+                    onClick={() => navigate(`/post/${post.id}`)}
+                  >
+                    <h4>{post.title}</h4>
+                    <Upvote post={post} />
+                  </div>
+                  <div className={styles.postActions}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/edit-post/${post.id}`);
+                      }}
+                    >
+                      Редактировать
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(post.id);
+                      }}
+                    >
+                      Удалить
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       ) : (
-        <ul className="posts-list">
-          {posts.map((post) => (
-            <li key={post.id}>
-              <div
-                className="post-content"
-                onClick={() => navigate(`/post/${post.id}`)}
-              >
-                <h4>{post.title}</h4>
-                <Upvote post={post} />
-              </div>
-              <div className="post-actions">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/edit-post/${post.id}`);
-                  }}
-                >
-                  Редактировать
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(post.id);
-                  }}
-                >
-                  Удалить
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div>
+          <h3 className={styles.subredditsTitle}>Мои сообщества</h3>
+          <div className={styles.communityHeader}>
+            <button
+              className={styles.createCommunityButton}
+              onClick={() => {
+                setEditingCommunity(null);
+                setShowCommunityModal(true);
+              }}
+            >
+              Создать сообщество
+            </button>
+          </div>
+          {subreddits.length === 0 ? (
+            <p className={styles.noSubreddits}>Сообществ пока нет</p>
+          ) : (
+            <ul className={styles.subredditsList}>
+              {subreddits.map((sub) => (
+                <li key={sub.id} className={styles.subredditItem}>
+                  <Link
+                    to={`/subreddit/${sub.id}`}
+                    className={styles.subredditLink}
+                  >
+                    {sub.name}
+                  </Link>
+                  <p>{sub.description}</p>
+                  <div className={styles.subredditActions}>
+                    <button onClick={() => {
+                      setEditingCommunity(sub);
+                      setShowCommunityModal(true);
+                    }}>
+                      Редактировать
+                    </button>
+                    <button onClick={() => handleSubDelete(sub.id)}>
+                      Удалить
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {/* Модальное окно для создания/редактирования сообщества */}
+      {showCommunityModal && (
+        <CommunityModal
+          community={editingCommunity}
+          onClose={() => setShowCommunityModal(false)}
+          onSave={handleCommunitySave}
+        />
       )}
     </div>
   );

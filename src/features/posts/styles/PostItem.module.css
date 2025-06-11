@@ -1,56 +1,90 @@
-.post-item {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  transition: box-shadow 0.2s ease;
+/* Основной контейнер поста */
+.postContainer {
+  position: relative; /* Для абсолютного позиционирования меню */
+  border: 1px solid #444;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background: #292929;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.post-item:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+/* Заголовок поста */
+.postTitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #ffffff;
 }
 
-.post-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1a202c;
-  text-decoration: none;
+/* Текст поста */
+.postContent {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #e8e8e8;
+  margin-bottom: 12px;
 }
 
-.post-meta {
-  font-size: 0.875rem;
-  color: #718096;
+/* Мета-информация (автор, дата, сабреддит) */
+.postMeta {
+  font-size: 14px;
+  color: #bbb;
+  margin-bottom: 12px;
 }
 
-.post-content {
-  font-size: 1rem;
-  color: #2d3748;
+/* Контейнер голосования */
+.postVotesContainer {
+  margin-right: 16px;
 }
 
-.post-actions {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  font-size: 0.875rem;
-  color: #4a5568;
+/* Выпадающее меню действий — перенесли кнопки в троеточие */
+.actionsMenuWrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
 }
 
-.vote-button {
+/* Кнопка меню (три точки) */
+.actionsMenuButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #bbb;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  background-color: transparent;
-  transition: background-color 0.2s ease;
+  padding: 5px;
 }
 
-.vote-button:hover {
-  background-color: #edf2f7;
+.actionsMenuButton:hover {
+  color: #ffffff;
 }
 
-.vote-button.active {
-  color: #3182ce;
+/* Выпадающее меню */
+.actionsDropdown {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: #1c1c1c;
+  border: 1px solid #444;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Кнопки внутри выпадающего меню */
+.dropdownButton {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #e8e8e8;
+  transition: background 0.2s ease;
+}
+
+.dropdownButton:hover {
+  background: #444;
 }
