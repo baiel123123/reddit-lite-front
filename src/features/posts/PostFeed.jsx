@@ -23,6 +23,7 @@ export default function PostFeed() {
         { credentials: "include" }
       );
       const postsData = await res.json();
+      console.log("postsData:", postsData);
 
       if (postsData.length === 0) {
         setHasMore(false);
@@ -50,7 +51,6 @@ export default function PostFeed() {
     }
   }, [offset, sortBy, loading, hasMore]);
 
-  // Когда сортировка меняется — сбросить всё
   useEffect(() => {
     setPosts([]);
     setOffset(0);

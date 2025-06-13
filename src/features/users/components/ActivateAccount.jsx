@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import styles from "../styles/ActivateAcoount.module.css";
 
-export default function ActivateAccount() {
+export default function ActivateAccount({ onClose }) {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,22 +57,31 @@ export default function ActivateAccount() {
   };
 
   return (
-    <div>
-      <h3>Активация аккаунта</h3>
-      <input
-        type="text"
-        placeholder="Код активации"
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-      />
-      <button onClick={activate} disabled={loading}>
-        {loading ? "Активируем..." : "Активировать"}
-      </button>
-      <p>{message}</p>
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <h3 className={styles.title}>Активация аккаунта</h3>
+        <input
+          type="text"
+          placeholder="Код активации"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          className={styles.input}
+        />
+        <button onClick={activate} disabled={loading} className={styles.activateButton}>
+          {loading ? "Активируем..." : "Активировать"}
+        </button>
+        <p className={styles.message}>{message}</p>
 
-      <div style={{ marginTop: "20px" }}>
-        <button onClick={resendCode}>Отправить код ещё раз</button>
-        <p>{resendMessage}</p>
+        <div className={styles.resendSection}>
+          <button onClick={resendCode} className={styles.resendButton}>
+            Отправить код ещё раз
+          </button>
+          <p className={styles.resendMessage}>{resendMessage}</p>
+        </div>
+
+        <button className={styles.closeButton} onClick={onClose}>
+          ✕ Закрыть
+        </button>
       </div>
     </div>
   );

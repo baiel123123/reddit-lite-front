@@ -222,3 +222,61 @@
 .createCommunityButton:hover {
   background-color: #005bb5;
 }
+
+.postItem {
+  background: #292929;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  transition: background 0.3s ease;
+  position: relative; /* Добавлено, чтобы дочерние абсолютные элементы позиционировались относительно этого блока */
+}
+
+.menuContainer {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #bbb;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.menuButton:hover {
+  color: #fff;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  background: #292929;
+  border: 1px solid #444;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+  z-index: 100;
+}
+
+.menu button {
+  background: none;
+  border: none;
+  color: #e8e8e8;
+  font-size: 16px;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.menu button:hover {
+  background: #333;
+}

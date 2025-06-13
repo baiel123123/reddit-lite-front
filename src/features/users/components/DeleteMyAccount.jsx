@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import ConfirmModal from "../components/ConfirmModal";
+import styles from "../styles/DeleteMyAccount.module.css";
 
 function DeleteMyAccount() {
   const [error, setError] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleDelete = () => {
+  const deleteAccount = () => {
     fetch("http://localhost:8000/users/delete/", {
       method: "DELETE",
       credentials: "include",
     })
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error("Ошибка при удалении");
         return res.json();
       })
@@ -20,16 +23,30 @@ function DeleteMyAccount() {
         logout();
         navigate("/login");
       })
-      .catch(err => setError(err.message));
+      .catch((err) => setError(err.message));
   };
 
   return (
-    <div>
-      <h2>Удалить мой аккаунт</h2>
-      <button onClick={handleDelete} style={{ color: "red" }}>
+    <div className={styles.container}>
+      <h2 className={styles.title}>Удалить мой аккаунт</h2>
+      <button
+        className={styles.deleteButton}
+        onClick={() => setShowConfirm(true)}
+      >
         Удалить аккаунт
       </button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
+
+      {showConfirm && (
+        <ConfirmModal
+          message="Вы точно уверены, что хотите удалить аккаунт?"
+          onConfirm={() => {
+            setShowConfirm(false);
+            deleteAccount();
+          }}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
     </div>
   );
 }

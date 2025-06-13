@@ -12,11 +12,14 @@ export default function MyProfile() {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [subreddits, setSubreddits] = useState([]);
-  const [activeTab, setActiveTab] = useState("posts"); // "posts" или "subreddits"
+  const [activeTab, setActiveTab] = useState("posts"); 
   const [error, setError] = useState("");
   const [showUserModal, setShowUserModal] = useState(false);
   const [showCommunityModal, setShowCommunityModal] = useState(false);
   const [editingCommunity, setEditingCommunity] = useState(null);
+  const [showMenu, setShowMenu] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +37,14 @@ export default function MyProfile() {
         });
         if (!postsRes.ok) throw new Error("Ошибка при загрузке постов");
         const postsData = await postsRes.json();
+        console.log("postsData:", postsData);
+
+        if (!Array.isArray(postsData) || postsData.length === 0) {
+          setHasMore(false);
+          setLoading(false);
+          setPosts([]);
+          return;
+        }
 
         const ids = postsData.map((p) => p.id).join(",");
         const voteRes = await fetch(
@@ -57,7 +68,6 @@ export default function MyProfile() {
     fetchCurrentUser();
   }, []);
 
-  // После загрузки пользователя подгружаем сообщества
   useEffect(() => {
     const fetchMySubreddits = async () => {
       if (!user) return;
@@ -97,12 +107,10 @@ export default function MyProfile() {
     setUser(updatedUser);
   };
 
-  // Функция сохранения сообщества, вызываемая из CommunityModal
   const handleCommunitySave = async (form, id) => {
     try {
       const url = id ? `${API_URL}/${id}` : `${API_URL}/create/`;
       const method = id ? "PUT" : "POST";
-      // В режиме обновления отправляем только описание
       const bodyData = id ? { description: form.description } : form;
 
       const res = await fetch(url, {
@@ -116,7 +124,6 @@ export default function MyProfile() {
         const errorData = await res.json();
         throw new Error(errorData.detail || "Ошибка при сохранении");
       }
-      // Обновляем список сообществ
       const params = new URLSearchParams({ created_by_id: user.id });
       const subRes = await fetch(`${API_URL}/find/?${params.toString()}`, {
         credentials: "include",
@@ -138,7 +145,6 @@ export default function MyProfile() {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Ошибка при удалении");
-      // Обновляем список сообществ
       const params = new URLSearchParams({ created_by_id: user.id });
       const subRes = await fetch(`${API_URL}/find/?${params.toString()}`, {
         credentials: "include",
@@ -155,11 +161,7 @@ export default function MyProfile() {
 
   return (
     <div className={styles.myProfileContainer}>
-      <UserProfile
-        user={user}
-        currentUser={user}
-        onUpdateClick={() => setShowUserModal(true)}
-      />
+      <UserProfile user={user} currentUser={user} onUpdateClick={() => setShowUserModal(true)} />
 
       {showUserModal && (
         <UpdateUserModal
@@ -169,7 +171,6 @@ export default function MyProfile() {
         />
       )}
 
-      {/* Вкладки */}
       <div className={styles.tabs}>
         <button
           className={activeTab === "posts" ? styles.activeTab : ""}
@@ -188,36 +189,48 @@ export default function MyProfile() {
       {activeTab === "posts" ? (
         <div>
           <h3 className={styles.postsTitle}>Мои посты</h3>
-          {posts.length === 0 ? (
+          {posts.length === 0 && !loading ? (
             <p className={styles.noPosts}>Постов пока нет</p>
           ) : (
             <ul className={styles.postsList}>
               {posts.map((post) => (
                 <li key={post.id} className={styles.postItem}>
-                  <div
-                    className={styles.postContent}
-                    onClick={() => navigate(`/post/${post.id}`)}
-                  >
+                  <div className={styles.postContent} onClick={() => navigate(`/post/${post.id}`)}>
                     <h4>{post.title}</h4>
                     <Upvote post={post} />
                   </div>
-                  <div className={styles.postActions}>
+
+                  <div className={styles.menuContainer}>
                     <button
+                      className={styles.menuButton}
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/edit-post/${post.id}`);
+                        setShowMenu(showMenu === post.id ? null : post.id);
                       }}
                     >
-                      Редактировать
+                      &#x22EE;
                     </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(post.id);
-                      }}
-                    >
-                      Удалить
-                    </button>
+
+                    {showMenu === post.id && (
+                      <div className={styles.menu}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/edit-post/${post.id}`);
+                          }}
+                        >
+                          Редактировать
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(post.id);
+                          }}
+                        >
+                          Удалить
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </li>
               ))}

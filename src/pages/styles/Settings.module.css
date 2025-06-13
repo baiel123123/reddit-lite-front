@@ -1,0 +1,69 @@
+.settingsContainer {
+  background-color: #1c1c1c;
+  color: #e8e8e8;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: sans-serif;
+}
+
+.settingsTitle {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.section {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 20px;
+}
+
+.sectionHeader {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Поля профиля */
+.profileField,
+.accountField {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-top: 1px solid #444;
+}
+
+.fieldLabel {
+  font-weight: bold;
+}
+
+.redText {
+  color: #ff4500;
+}
+
+.fieldValueWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.fieldValue {
+  color: #aaa;
+  margin-right: 10px;
+}
+
+/* Кнопка-стрелка */
+.arrowButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #0079d3;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.arrowButton:hover {
+  color: #005bb5;
+}

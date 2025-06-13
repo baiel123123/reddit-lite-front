@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import LogoutButton from "./LogoutButton";
 
 export default function Navbar() {
   const { user } = useContext(AuthContext);
@@ -73,7 +72,6 @@ export default function Navbar() {
               Admin
             </Link>
           )}
-          <LogoutButton />
         </>
       ) : (
         <>

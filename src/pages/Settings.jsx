@@ -1,45 +1,96 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import styles from "./styles/Settings.module.css";
+import ActivateAccount from "../features/users/components/ActivateAccount";
 
 export default function Settings() {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [showActivateModal, setShowActivateModal] = useState(false);
 
-  const goToActivate = () => {
-    navigate('/activate');
+  const handleLogout = () => {
+    if (typeof logout === "function") {
+      logout();
+    }
+    navigate("/login");
   };
 
   return (
-    <div>
-      <h2>Настройки</h2>
+    <div className={styles.settingsContainer}>
+      <h2 className={styles.settingsTitle}>Настройки</h2>
 
-      <div style={{ marginBottom: '20px' }}>
-        <h3>Профиль</h3>
-        {/* Вместо UserProfile теперь ссылка на твой профиль */}
-        <Link to="/my-profile">
-          <button>Перейти в мой профиль</button>
-        </Link>
-
-        <p><strong>Обновить профиль:</strong> {user?.role}</p>
-        <Link to="/update-user">
-          <button>Обновить</button>
-        </Link>
+      <div className={styles.section}>
+        <h3 className={styles.sectionHeader}>Профиль</h3>
+        <div className={styles.profileField}>
+          <span className={styles.fieldLabel}>Email</span>
+          <div className={styles.fieldValueWrapper}>
+            <span className={styles.fieldValue}>
+              {user?.email || "example@example.com"}
+            </span>
+            <button
+              className={styles.arrowButton}
+              onClick={() => navigate("/edit-profile")}
+            >
+              →
+            </button>
+          </div>
+        </div>
+        <div className={styles.profileField}>
+          <span className={styles.fieldLabel}>Gender</span>
+          <div className={styles.fieldValueWrapper}>
+            <span className={styles.fieldValue}>
+              {user?.gender || "Не указано"}
+            </span>
+            <button
+              className={styles.arrowButton}
+              onClick={() => navigate("/edit-profile")}
+            >
+              →
+            </button>
+          </div>
+        </div>
       </div>
 
       {!user?.is_activated && (
-        <div>
-          <h3>Активация аккаунта</h3>
-          <button onClick={goToActivate}>Перейти к активации</button>
+        <div className={styles.section}>
+          <h3 className={styles.sectionHeader}>Активация аккаунта</h3>
+          <div className={styles.accountField}>
+            <span className={styles.fieldLabel}>Перейти к активации</span>
+            <button
+              className={styles.arrowButton}
+              onClick={() => setShowActivateModal(true)}
+            >
+              →
+            </button>
+          </div>
         </div>
       )}
 
-      <div style={{ marginTop: '40px' }}>
-        <h3>Аккаунт</h3>
-        <Link to="/delete-account" style={{ color: 'red', fontWeight: 'bold' }}>
-          Удалить мой аккаунт
-        </Link>
+      <div className={styles.section}>
+        <h3 className={styles.sectionHeader}>Аккаунт</h3>
+        <div className={styles.accountField}>
+          <span className={`${styles.fieldLabel} ${styles.redText}`}>Выйти</span>
+          <button className={styles.arrowButton} onClick={handleLogout}>
+            →
+          </button>
+        </div>
+        <div className={styles.accountField}>
+          <span className={`${styles.fieldLabel} ${styles.redText}`}>
+            Удалить мой аккаунт
+          </span>
+          <button
+            className={styles.arrowButton}
+            onClick={() => navigate("/delete-account")}
+          >
+            →
+          </button>
+        </div>
       </div>
+
+      {showActivateModal && (
+        <ActivateAccount onClose={() => setShowActivateModal(false)} />
+      )}
     </div>
   );
 }
