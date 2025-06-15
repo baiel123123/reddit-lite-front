@@ -1,12 +1,14 @@
-/* Основной контейнер поста */
 .postContainer {
-  position: relative; /* Для абсолютного позиционирования меню */
+  position: relative;
   border: 1px solid #444;
   padding: 16px;
   margin-bottom: 16px;
   border-radius: 8px;
   background: #292929;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 
 /* Заголовок поста */
@@ -87,4 +89,10 @@
 
 .dropdownButton:hover {
   background: #444;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
