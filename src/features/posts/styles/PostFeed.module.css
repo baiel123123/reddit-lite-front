@@ -1,0 +1,125 @@
+/* Основной контейнер */
+.container {
+  background-color: #1c1c1c;
+  color: #e8e8e8;
+  padding: 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Заголовок */
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+/* Селект сортировки */
+.sortSelect {
+  background-color: #333;
+  border: 1px solid #444;
+  color: #e8e8e8;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* Карточка поста */
+.postItem {
+  background-color: #1f1f1f;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  overflow: hidden;
+}
+
+.postItem:hover {
+  background-color: #2a2a2a;
+}
+
+/* Заголовок поста */
+.postTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/* Текст поста */
+.postContent {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #e8e8e8;
+  margin-bottom: 10px;
+  word-break: break-word;
+}
+
+/* Метаданные */
+.postMeta {
+  font-size: 14px;
+  color: #bbb;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Ссылка на сабреддит */
+.subredditLink {
+  color: #0079d3;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.subredditLink:hover {
+  color: #005bb5;
+}
+
+/* Обёртка для изображения */
+.imageWrapper {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+/* Изображение поста */
+.postImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+  max-height: 400px;
+}
+
+.postImage:hover {
+  transform: scale(1.015);
+  cursor: zoom-in;
+}
+
+/* Модальное окно */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}

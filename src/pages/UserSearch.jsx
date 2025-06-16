@@ -1,43 +1,62 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 export default function UserSearch() {
-  const [id, setId] = useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const query = useQuery();
+  const initialQuery = query.get("query") || "";
+
+  const [username, setUsername] = useState(initialQuery);
   const [results, setResults] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!initialQuery.trim()) {
+      setResults([]);
+      setError("");
+      return;
+    }
+    const fetchUsers = async () => {
+      setLoading(true);
+      try {
+        const queryString = new URLSearchParams({ username: initialQuery }).toString();
+        const response = await fetch(`http://localhost:8000/users/find/?${queryString}`, {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) throw new Error("Ошибка при поиске пользователей");
+        const data = await response.json();
+        setResults(data);
+        setError("");
+      } catch (err) {
+        setError(err.message);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, [initialQuery]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
 
-    const body = {};
-    if (id.trim()) body.id = Number(id);
-    if (username.trim()) body.username = username.trim();
-    if (email.trim()) body.email = email.trim();
-
-    if (Object.keys(body).length === 0) {
-      setError("Введите хотя бы одно поле для поиска");
+    if (!username.trim()) {
+      setError("Введите имя пользователя для поиска");
       setResults([]);
       return;
     }
 
-    setError("");
-
-    try {
-      const queryString = new URLSearchParams(body).toString();
-      const response = await fetch(`http://localhost:8000/users/find/?${queryString}`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error("Ошибка при поиске пользователей");
-
-      const data = await response.json();
-      setResults(data);
-    } catch (err) {
-      setError(err.message);
-    }
+    // Навигация должна быть в SearchBar, но если хочешь - можно и тут искать напрямую
+    // Здесь просто обновим URL без навигации — для примера
+    window.history.replaceState(null, "", `?query=${encodeURIComponent(username.trim())}`);
+    
+    // fetchUsers запускается из useEffect при изменении initialQuery,
+    // поэтому нужно синхронизировать username с initialQuery, чтобы триггерить useEffect
   };
 
   return (
@@ -45,29 +64,18 @@ export default function UserSearch() {
       <h2>Поиск пользователей</h2>
       <form onSubmit={handleSearch} style={{ marginBottom: 20 }}>
         <input
-          type="number"
-          placeholder="ID"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-          style={{ marginRight: 10 }}
-        />
-        <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{ marginRight: 10 }}
+          style={{ marginRight: 10, padding: "6px", fontSize: "16px" }}
         />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ marginRight: 10 }}
-        />
-        <button type="submit">Найти</button>
+        <button type="submit" style={{ padding: "6px 12px", fontSize: "16px" }}>
+          Найти
+        </button>
       </form>
 
+      {loading && <p>Загрузка...</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {results.length > 0 ? (
@@ -81,7 +89,7 @@ export default function UserSearch() {
           ))}
         </ul>
       ) : (
-        <p>Пользователи не найдены</p>
+        !loading && <p>Пользователи не найдены</p>
       )}
     </div>
   );

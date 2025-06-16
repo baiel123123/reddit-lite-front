@@ -1,0 +1,42 @@
+.voteContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Базовые стили для кнопок голосования */
+.voteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px;
+  border-radius: 999px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Цвет при отсутствии голоса */
+.voteButton.upvote {
+  color: #bbb;
+}
+
+.voteButton.downvote {
+  color: #bbb;
+}
+
+/* При наведении — увеличение */
+.voteButton:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+/* Активный голос за (upvote) */
+.voteButton.upvoted {
+  color: #4CAF50; /* Зеленый */
+}
+
+/* Активный голос против (downvote) */
+.voteButton.downvoted {
+  color: #f44336; /* Красный */
+}

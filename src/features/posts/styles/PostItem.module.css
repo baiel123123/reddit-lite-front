@@ -1,0 +1,96 @@
+.postContainer {
+  position: relative;
+  border: 1px solid #444;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background: #292929;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+/* Заголовок поста */
+.postTitle {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+/* Текст поста */
+.postContent {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #e8e8e8;
+  margin-bottom: 12px;
+}
+
+/* Мета-информация (автор, дата, сабреддит) */
+.postMeta {
+  font-size: 14px;
+  color: #bbb;
+  margin-bottom: 12px;
+}
+
+.postVotesContainer {
+  margin-right: 16px;
+}
+
+.actionsMenuWrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+/* Кнопка меню (три точки) */
+.actionsMenuButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #bbb;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.actionsMenuButton:hover {
+  color: #ffffff;
+}
+
+/* Выпадающее меню */
+.actionsDropdown {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: #1c1c1c;
+  border: 1px solid #444;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Кнопки внутри выпадающего меню */
+.dropdownButton {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #e8e8e8;
+  transition: background 0.2s ease;
+}
+
+.dropdownButton:hover {
+  background: #444;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}

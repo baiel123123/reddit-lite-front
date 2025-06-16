@@ -1,13 +1,14 @@
-// src/pages/Home.jsx
 import React from "react";
+import PostFeed from "../features/posts/PostFeed";
+import styles from "./styles/Home.module.css";
 
-function Home() {
+export default function Home() {
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Главная</h1>
-      <p>Здесь будут отображаться посты.</p>
+    <div className={styles.container}>
+
+      <div className={styles.postFeedWrapper}>
+        <PostFeed />
+      </div>
     </div>
   );
 }
-
-export default Home;

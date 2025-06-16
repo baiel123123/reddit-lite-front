@@ -1,0 +1,162 @@
+/* CommentItem.module.css */
+
+/* Корневой контейнер комментария с разделением */
+.commentContainer {
+  background: #292929;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;      /* Отступ между комментариями */
+  border-bottom: 1px solid #444;  /* Мягкая нижняя разделительная линия */
+  color: #e8e8e8;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  padding: 15px;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid #444;
+}
+
+
+.commentContainer:not(:last-child) {
+  border-bottom: 1px solid #444;
+  margin-bottom: 20px;
+}
+
+/* Шапка комментария: автор, время и кнопка действий */
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.authorInfo {
+  display: flex;
+  align-items: center;
+}
+
+.authorName {
+  font-weight: bold;
+  margin-right: 8px;
+  color: #ffffff;
+}
+
+.commentTime {
+  font-size: 0.85em;
+  color: #bbb;
+}
+
+/* Контейнер для меню с тремя точками */
+.actionsMenuWrapper {
+  position: relative;
+}
+
+/* Кнопка меню — три точки, оставляем как и раньше */
+.actionsMenuButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+}
+
+/* Выпадающее меню действий */
+.actionsDropdown {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Кнопки внутри выпадающего меню */
+.dropdownButton {
+  display: block;
+  padding: 8px 12px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Содержимое комментария */
+.commentContent {
+  margin: 10px 0;
+  line-height: 1.4;
+}
+
+/* Контейнер для голосования и кнопки "Ответить" */
+.actionBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Группа кнопок голосования */
+.voteGroup {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Кнопки голосования с эффектами Reddit (оставляем как раньше) */
+.voteButton {
+  background-color: #ff4500;
+  background-image: linear-gradient(180deg, #292929, #292929);
+  border: none;
+  border-radius: 9999px;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+}
+
+.voteButton:hover {
+  background-color: #e03d00;
+  background-image: linear-gradient(180deg, #e03d00, #c73711);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.voteButton:active {
+  transform: translateY(1px);
+}
+
+/* Кнопка "Ответить" */
+.replyButton {
+  background: none;
+  border: none;
+  color: #0079d3;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Секция для ответа */
+.replySection {
+  margin-top: 10px;
+}
+
+/* Стили для текстового поля ответа */
+.replyTextarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+/* Стили для кнопки отправки ответа */
+.submitReplyButton {
+  margin-top: 5px;
+  background: #0079d3;
+  border: none;
+  padding: 8px 12px;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}

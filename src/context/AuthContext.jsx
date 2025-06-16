@@ -10,15 +10,12 @@ export const AuthProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-      // Проверяем на сервере, что сессия валидна
-      fetch("http://localhost:8000/users/me/", { credentials: "include" })
-        .then((res) => {
-          if (!res.ok) throw new Error("Неавторизован");
+      fetch("/users/me/", { credentials: "include" })
+        .then(res => {
+          if (!res.ok) throw new Error("Unauthorized");
           return res.json();
         })
-        .then((data) => {
-          setUser(data);
-        })
+        .then(data => setUser(data))
         .catch(() => {
           setUser(null);
           localStorage.removeItem("user");
@@ -39,10 +36,27 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
+  const refreshUser = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/users/me/", { credentials: "include" });
+      if (!res.ok) throw new Error("Unauthorized");
+      const data = await res.json();
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+    } catch {
+      setUser(null);
+      localStorage.removeItem("user");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   if (loading) return <div>Загрузка...</div>; // или любой спиннер
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

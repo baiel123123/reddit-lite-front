@@ -1,0 +1,28 @@
+/* Основной контейнер для страницы Home */
+.container {
+  background-color: #1c1c1c;   /* тёмный фон страницы */
+  color: #e8e8e8;             /* мягкий белый цвет текста */
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Заголовок страницы */
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Обертка для ленты постов */
+.postFeedWrapper {
+  margin: 0 auto;
+  max-width: 800px;
+  width: 100%;
+}
+
+body {
+  background-color: #1c1c1c;  
+  font-family: sans-serif;
+}
