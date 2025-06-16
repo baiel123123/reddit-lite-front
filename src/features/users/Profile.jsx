@@ -30,8 +30,7 @@ export default function UserProfilePage() {
       }
     };
 
-    // Загрузка постов пользователя
-    const fetchUserPosts = async () => {
+      const fetchUserPosts = async () => {
       try {
         const res = await fetch(`http://localhost:8000/posts/user_posts/?user_id=${userId}`, {
           credentials: "include",

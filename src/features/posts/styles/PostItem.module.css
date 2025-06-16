@@ -34,12 +34,10 @@
   margin-bottom: 12px;
 }
 
-/* Контейнер голосования */
 .postVotesContainer {
   margin-right: 16px;
 }
 
-/* Выпадающее меню действий — перенесли кнопки в троеточие */
 .actionsMenuWrapper {
   position: absolute;
   top: 10px;

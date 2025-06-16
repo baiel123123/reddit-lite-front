@@ -15,7 +15,6 @@ export default function PostFeed() {
   const limit = 10;
   const navigate = useNavigate();
 
-  // Ref для троттлинга вызова запросов
   const lastLoadTimeRef = useRef(0);
 
   const loadMorePosts = useCallback(async () => {
@@ -120,7 +119,6 @@ export default function PostFeed() {
                 {post.subreddit.name}
               </Link>
             </span>
-            {/* Добавляем иконку комментариев и счетчик */}
             <span className={styles.commentInfo}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

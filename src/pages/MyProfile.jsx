@@ -12,16 +12,19 @@ export default function MyProfile() {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [subreddits, setSubreddits] = useState([]);
-  const [activeTab, setActiveTab] = useState("posts"); 
+  const [activeTab, setActiveTab] = useState("posts");
   const [error, setError] = useState("");
   const [showUserModal, setShowUserModal] = useState(false);
   const [showCommunityModal, setShowCommunityModal] = useState(false);
   const [editingCommunity, setEditingCommunity] = useState(null);
+  // Для выпадающего меню постов и сообществ
   const [showMenu, setShowMenu] = useState(null);
+  const [showCommunityMenu, setShowCommunityMenu] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Запрос данных текущего пользователя и его постов
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -68,12 +71,12 @@ export default function MyProfile() {
     fetchCurrentUser();
   }, []);
 
+  // Запрос сабреддитов через endpoint "/my-subreddits/"
   useEffect(() => {
     const fetchMySubreddits = async () => {
       if (!user) return;
       try {
-        const params = new URLSearchParams({ created_by_id: user.id });
-        const res = await fetch(`${API_URL}/find/?${params.toString()}`, {
+        const res = await fetch(`${API_URL}/my-subreddits/`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Ошибка при загрузке сообществ");
@@ -124,8 +127,8 @@ export default function MyProfile() {
         const errorData = await res.json();
         throw new Error(errorData.detail || "Ошибка при сохранении");
       }
-      const params = new URLSearchParams({ created_by_id: user.id });
-      const subRes = await fetch(`${API_URL}/find/?${params.toString()}`, {
+      // Обновляем список сообществ после сохранения
+      const subRes = await fetch(`${API_URL}/my-subreddits/`, {
         credentials: "include",
       });
       const data = await subRes.json();
@@ -145,8 +148,7 @@ export default function MyProfile() {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Ошибка при удалении");
-      const params = new URLSearchParams({ created_by_id: user.id });
-      const subRes = await fetch(`${API_URL}/find/?${params.toString()}`, {
+      const subRes = await fetch(`${API_URL}/my-subreddits/`, {
         credentials: "include",
       });
       const data = await subRes.json();
@@ -161,7 +163,11 @@ export default function MyProfile() {
 
   return (
     <div className={styles.myProfileContainer}>
-      <UserProfile user={user} currentUser={user} onUpdateClick={() => setShowUserModal(true)} />
+      <UserProfile
+        user={user}
+        currentUser={user}
+        onUpdateClick={() => setShowUserModal(true)}
+      />
 
       {showUserModal && (
         <UpdateUserModal
@@ -194,9 +200,48 @@ export default function MyProfile() {
           ) : (
             <ul className={styles.postsList}>
               {posts.map((post) => (
-                <li key={post.id} className={styles.postItem}>
-                  <div className={styles.postContent} onClick={() => navigate(`/post/${post.id}`)}>
-                    <h4>{post.title}</h4>
+                <li
+                  key={post.id}
+                  className={styles.postItem}
+                  onClick={() => navigate(`/post/${post.id}`)}
+                >
+                  <h4 className={styles.postTitle}>{post.title}</h4>
+
+                  {post.image_url && (
+                    <div
+                      className={styles.imageWrapper}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <img
+                        src={`http://localhost:8000/${post.image_url}`}
+                        alt="Post"
+                        className={styles.postImage}
+                      />
+                    </div>
+                  )}
+
+                  <p className={styles.postContent}>{post.content}</p>
+
+                  <div className={styles.postMeta}>
+                    <span className={styles.authorInfo}>
+                      Автор: {post.user?.username || user.username || "Неизвестный"}
+                    </span>
+                    <span className={styles.separator}> </span>
+                    <span className={styles.subredditInfo}>
+                      Subreddit:{" "}
+                      <Link
+                        to={`/subreddit/${post.subreddit.id}`}
+                        className={styles.subredditLink}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {post.subreddit.name}
+                      </Link>
+                    </span>
+                  </div>
+
+                  <div className={styles.postVotesContainer}>
                     <Upvote post={post} />
                   </div>
 
@@ -210,7 +255,6 @@ export default function MyProfile() {
                     >
                       &#x22EE;
                     </button>
-
                     {showMenu === post.id && (
                       <div className={styles.menu}>
                         <button
@@ -257,24 +301,53 @@ export default function MyProfile() {
             <ul className={styles.subredditsList}>
               {subreddits.map((sub) => (
                 <li key={sub.id} className={styles.subredditItem}>
-                  <Link
-                    to={`/subreddit/${sub.id}`}
-                    className={styles.subredditLink}
-                  >
-                    {sub.name}
-                  </Link>
-                  <p>{sub.description}</p>
-                  <div className={styles.subredditActions}>
-                    <button onClick={() => {
-                      setEditingCommunity(sub);
-                      setShowCommunityModal(true);
-                    }}>
-                      Редактировать
-                    </button>
-                    <button onClick={() => handleSubDelete(sub.id)}>
-                      Удалить
+                  {/* Заголовок с названием и кнопкой меню справа */}
+                  <div className={styles.subredditHeader}>
+                    <Link
+                      to={`/subreddit/${sub.id}`}
+                      className={styles.subredditLink}
+                    >
+                      {sub.name}
+                    </Link>
+                    <button
+                      className={styles.menuButton}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowCommunityMenu(
+                          showCommunityMenu === sub.id ? null : sub.id
+                        );
+                      }}
+                    >
+                      &#x22EE;
                     </button>
                   </div>
+                  {showCommunityMenu === sub.id && (
+                    <div className={styles.menu}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingCommunity(sub);
+                          setShowCommunityModal(true);
+                          setShowCommunityMenu(null);
+                        }}
+                      >
+                        Редактировать
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSubDelete(sub.id);
+                          setShowCommunityMenu(null);
+                        }}
+                      >
+                        Удалить
+                      </button>
+                    </div>
+                  )}
+                  <p className={styles.subredditDescription}>{sub.description}</p>
+                  <p className={styles.communityMeta}>
+                    Создано: {user.username}
+                  </p>
                 </li>
               ))}
             </ul>
@@ -282,7 +355,6 @@ export default function MyProfile() {
         </div>
       )}
 
-      {/* Модальное окно для создания/редактирования сообщества */}
       {showCommunityModal && (
         <CommunityModal
           community={editingCommunity}
