@@ -47,18 +47,6 @@ export default function Navbar() {
             Настройки
           </Link>
           <Link
-            to="/search"
-            style={{ color: "#e8e8e8", textDecoration: "none" }}
-          >
-            Поиск
-          </Link>
-          <Link
-            to="/create-post"
-            style={{ color: "#e8e8e8", textDecoration: "none" }}
-          >
-            Создать пост
-          </Link>
-          <Link
             to="/subreddits"
             style={{ color: "#e8e8e8", textDecoration: "none" }}
           >

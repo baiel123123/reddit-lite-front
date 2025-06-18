@@ -17,14 +17,12 @@ export default function MyProfile() {
   const [showUserModal, setShowUserModal] = useState(false);
   const [showCommunityModal, setShowCommunityModal] = useState(false);
   const [editingCommunity, setEditingCommunity] = useState(null);
-  // Для выпадающего меню постов и сообществ
   const [showMenu, setShowMenu] = useState(null);
   const [showCommunityMenu, setShowCommunityMenu] = useState(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Запрос данных текущего пользователя и его постов
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -40,7 +38,6 @@ export default function MyProfile() {
         });
         if (!postsRes.ok) throw new Error("Ошибка при загрузке постов");
         const postsData = await postsRes.json();
-        console.log("postsData:", postsData);
 
         if (!Array.isArray(postsData) || postsData.length === 0) {
           setHasMore(false);
@@ -71,7 +68,6 @@ export default function MyProfile() {
     fetchCurrentUser();
   }, []);
 
-  // Запрос сабреддитов через endpoint "/my-subreddits/"
   useEffect(() => {
     const fetchMySubreddits = async () => {
       if (!user) return;
@@ -127,7 +123,6 @@ export default function MyProfile() {
         const errorData = await res.json();
         throw new Error(errorData.detail || "Ошибка при сохранении");
       }
-      // Обновляем список сообществ после сохранения
       const subRes = await fetch(`${API_URL}/my-subreddits/`, {
         credentials: "include",
       });

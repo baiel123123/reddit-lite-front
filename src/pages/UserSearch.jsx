@@ -51,12 +51,7 @@ export default function UserSearch() {
       return;
     }
 
-    // Навигация должна быть в SearchBar, но если хочешь - можно и тут искать напрямую
-    // Здесь просто обновим URL без навигации — для примера
     window.history.replaceState(null, "", `?query=${encodeURIComponent(username.trim())}`);
-    
-    // fetchUsers запускается из useEffect при изменении initialQuery,
-    // поэтому нужно синхронизировать username с initialQuery, чтобы триггерить useEffect
   };
 
   return (

@@ -72,7 +72,6 @@ export default function PostPage() {
     } catch (_) {}
   }, []);
 
-  // Удаление комментария
   const onDeleteComment = async (commentId) => {
     if (!window.confirm("Удалить комментарий?")) return;
 
@@ -135,7 +134,6 @@ export default function PostPage() {
       if (comment.id === updatedComment.id) {
         let newUpvote = updatedComment.upvote;
 
-        // Если голос удаляется, корректируем счетчик
         if (updatedComment.user_vote === null) {
           newUpvote = comment.user_vote === true ? comment.upvote - 1 : comment.upvote + 1;
         }
@@ -143,8 +141,8 @@ export default function PostPage() {
         return {
           ...comment,
           ...updatedComment,
-          upvote: newUpvote, // Корректируем upvote при отмене
-          children: comment.children || updatedComment.children, // сохраняем вложенные комментарии
+          upvote: newUpvote, 
+          children: comment.children || updatedComment.children,
         };
       }
       if (comment.children && comment.children.length > 0) {

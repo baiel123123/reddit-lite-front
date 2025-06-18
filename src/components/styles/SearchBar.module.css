@@ -1,0 +1,85 @@
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  background-color: #1c1c1c;          /* Тёмный фон для панели */
+  border-bottom: 1px solid #444;       /* Нижняя граница */
+  position: fixed;
+  top: 0;
+  width: 80%;
+  z-index: 1000;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.searchForm {
+  display: flex;
+  width: 400px;  /* Увеличиваем ширину поиска */
+  margin: 0 auto;  /* Центрируем форму поиска */
+}
+
+.searchInputContainer {
+  position: relative;
+  width: 100%;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #c0c0c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px; 
+}
+
+.searchIcon svg {
+  width: 23px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 10px 8px 42px;  /* Увеличиваем левый отступ */
+  border: none;
+  border-radius: 9999px;          /* Полностью округлённые края */
+  background-color: #292929;       /* Тёмный фон для инпута */
+  color: #e8e8e8;
+  font-size: 14px;  /* Уменьшаем размер шрифта */
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #b0b0b0;
+}
+
+.createPostLink {
+  text-decoration: none;
+  margin-left: auto;  /* Прижимаем кнопку вправо */
+}
+
+.createPostButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+  font-weight: 600;
+  text-transform: none;
+  white-space: nowrap;
+  display: inline-block;
+  line-height: 1.5;
+}
+
+.createPostButton:hover {
+  background-color: #0056b3;
+  color: #ffffff;
+}

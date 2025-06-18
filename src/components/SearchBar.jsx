@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./styles/SearchBar.module.css";
+import CreatePostModal from "../features/posts/components/CreatePostModal";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -10,51 +13,47 @@ export default function SearchBar() {
     navigate(`/search?query=${encodeURIComponent(query)}`);
   };
 
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        padding: "8px 20px",
-        backgroundColor: "#1c1c1c",         // Тёмный фон для формы
-        borderBottom: "1px solid #444",       // Тёмная нижняя граница
-        position: "fixed",
-        top: 0,
-        width: "100%",
-        zIndex: 1000,
-        boxShadow: "0 1px 5px rgba(0,0,0,0.5)"
-      }}
-    >
-      <input
-        type="text"
-        placeholder="Поиск пользователей..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        style={{
-          flex: 1,
-          padding: "8px 12px",
-          border: "1px solid #444",         // Тёмная рамка для поля ввода
-          borderRadius: "4px 0 0 4px",
-          fontSize: "16px",
-          backgroundColor: "#292929",         // Ещё более тёмный фон для инпута
-          color: "#e8e8e8",                   // Светлый текст
-        }}
-      />
-      <button
-        type="submit"
-        style={{
-          padding: "8px 16px",
-          backgroundColor: "#ff4500",
-          border: "none",
-          color: "#fff",
-          cursor: "pointer",
-          borderRadius: "0 4px 4px 0",
-          fontWeight: "bold",
-          fontSize: "16px"
-        }}
-      >
-        Найти
+    <div className={styles.topBar}>
+      <form onSubmit={handleSubmit} className={styles.searchForm}>
+        <div className={styles.searchInputContainer}>
+          <div className={styles.searchIcon}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className={styles.size6}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+      </form>
+      <button onClick={openModal} className={styles.createPostButton}>
+        Create post
       </button>
-    </form>
+      {showModal && <CreatePostModal onClose={closeModal} />}
+    </div>
   );
 }

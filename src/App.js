@@ -21,7 +21,7 @@ import DeleteUserById from "./features/users/components/DeleteUserById";
 import AdminTools from "./features/users/AdminTools";
 import UserProfilePage from "./features/users/Profile";
 import MyProfile from "./pages/MyProfile";
-import CreatePost from "./features/posts/components/CreatePost";
+import CreatePost from "./features/posts/components/CreatePostModal";
 import EditPost from "./features/posts/components/EditPost";
 import PostPage from "./features/posts/PostPage";
 import SubredditManagerPage from "./features/subreddits/SubredditManagerPage";
@@ -32,15 +32,11 @@ function App() {
     <Router>
       <AuthProvider>
         <div style={{ display: "flex", height: "100vh" }}>
-          {/* Сайдбар */}
+          
           <Navbar />
-
-          {/* Контент и верхний поиск */}
           <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-            {/* Верхняя панель с поиском */}
             <SearchBar />
 
-            {/* Основной контент */}
             <main style={{ padding: "20px", flex: 1, overflowY: "auto" }}>
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -77,7 +73,6 @@ function App() {
 
                 <Route path="/profile/:userId" element={<UserProfilePage />} />
                 <Route path="/my-profile" element={<MyProfile />} />
-                <Route path="/create-post" element={<CreatePost />} />
                 <Route path="/edit-post/:postId" element={<EditPost />} />
                 <Route path="/post/:postId" element={<PostPage />} />
                 <Route path="/subreddits" element={<SubredditManagerPage />} />
