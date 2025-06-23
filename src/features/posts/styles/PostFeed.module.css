@@ -47,6 +47,7 @@
   font-weight: bold;
   margin-bottom: 10px;
   color: #fff;
+  margin-top: 10px;
 }
 
 /* Текст поста */
@@ -73,6 +74,8 @@
   color: #0079d3;
   text-decoration: none;
   transition: color 0.2s ease;
+  margin-right: 5px;
+  font-size: 12px;
 }
 
 .subredditLink:hover {
@@ -122,4 +125,38 @@
   max-height: 90vh;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.postFooter {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 15px;
+  color: #b0b0b0;
+  margin-top: 12px;
+  margin-bottom: 0;
+  padding-left: 2px;
+}
+
+.commentInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  color: #b0b0b0;
+}
+
+.author {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.postTime {
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.dot {
+  margin-right: 5px;
+  font-size: 10px;
 }

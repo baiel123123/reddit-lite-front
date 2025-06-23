@@ -36,6 +36,12 @@ export default function MyProfile() {
         const postsRes = await fetch("http://localhost:8000/posts/my_posts/", {
           credentials: "include",
         });
+        if (postsRes.status === 404) {
+          setHasMore(false);
+          setLoading(false);
+          setPosts([]);
+          return;
+        }
         if (!postsRes.ok) throw new Error("Ошибка при загрузке постов");
         const postsData = await postsRes.json();
 
@@ -296,7 +302,6 @@ export default function MyProfile() {
             <ul className={styles.subredditsList}>
               {subreddits.map((sub) => (
                 <li key={sub.id} className={styles.subredditItem}>
-                  {/* Заголовок с названием и кнопкой меню справа */}
                   <div className={styles.subredditHeader}>
                     <Link
                       to={`/subreddit/${sub.id}`}

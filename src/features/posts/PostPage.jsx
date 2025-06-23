@@ -25,7 +25,7 @@ export default function PostPage() {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Пост не найден");
-      const data = await res.json();
+      const data = await res.json();  
       setPost(data);
     } catch (err) {
       setError(err.message);
@@ -228,7 +228,9 @@ export default function PostPage() {
               setFlatComments((prev) =>
                 prev.filter((comment) => comment.id !== tempId)
               );
-            } else {
+            } else if (tempId) {
+              setFlatComments((prev) => [newComment, ...prev]);
+            } else if (newComment) {
               setFlatComments((prev) => [newComment, ...prev]);
             }
           }}

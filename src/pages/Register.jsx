@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import styles from "./styles/AuthForm.module.css";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -44,16 +45,16 @@ export default function Register() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Регистрация</h2>
-      <form onSubmit={handleRegister}>
+    <div className={styles.authContainer}>
+      <h2 className={styles.title}>Регистрация</h2>
+      <form onSubmit={handleRegister} className={styles.form}>
         <input
           type="text"
           placeholder="Имя пользователя"
           required
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{ display: "block", marginBottom: 10 }}
+          className={styles.input}
         />
         <input
           type="email"
@@ -61,7 +62,7 @@ export default function Register() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{ display: "block", marginBottom: 10 }}
+          className={styles.input}
         />
         <input
           type="password"
@@ -69,7 +70,7 @@ export default function Register() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ display: "block", marginBottom: 10 }}
+          className={styles.input}
         />
         <input
           type="password"
@@ -77,14 +78,14 @@ export default function Register() {
           required
           value={password2}
           onChange={(e) => setPassword2(e.target.value)}
-          style={{ display: "block", marginBottom: 10 }}
+          className={styles.input}
         />
-        <button type="submit">Зарегистрироваться</button>
+        <button type="submit" className={styles.button}>Зарегистрироваться</button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+      {error && <p className={styles.error}>{error}</p>}
+      {success && <p className={styles.success}>{success}</p>}
       <p>
-        Уже есть аккаунт? <Link to="/login">Войти</Link>
+        Уже есть аккаунт? <Link to="/login" className={styles.link}>Войти</Link>
       </p>
     </div>
   );

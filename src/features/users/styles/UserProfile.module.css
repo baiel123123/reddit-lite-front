@@ -92,3 +92,14 @@
 .updateButton:hover {
   background-color: #005bb5;
 }
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #232324;
+  border: 2px solid #444;
+  margin-bottom: 12px;
+  object-fit: cover;
+  display: block;
+}

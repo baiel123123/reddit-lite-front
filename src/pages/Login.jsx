@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import styles from "./styles/AuthForm.module.css";
 
 export default function Login() {
   const { login } = useAuth();
@@ -28,10 +29,8 @@ export default function Login() {
 
       const tokens = await loginRes.json();
 
-      // сохраняем refresh_token
       localStorage.setItem("refresh_token", tokens.refresh_token);
 
-      // теперь запросим текущего пользователя
       const userRes = await fetch("http://localhost:8000/users/me/", {
         credentials: "include",
       });
@@ -50,16 +49,16 @@ export default function Login() {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Вход</h2>
-      <form onSubmit={handleLogin}>
+    <div className={styles.authContainer}>
+      <h2 className={styles.title}>Вход</h2>
+      <form onSubmit={handleLogin} className={styles.form}>
         <input
           type="email"
           placeholder="Email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{ display: "block", marginBottom: 10 }}
+          className={styles.input}
         />
         <input
           type="password"
@@ -67,13 +66,13 @@ export default function Login() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ display: "block", marginBottom: 10 }}
+          className={styles.input}
         />
-        <button type="submit">Войти</button>
+        <button type="submit" className={styles.button}>Войти</button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
       <p>
-        Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+        Нет аккаунта? <Link to="/register" className={styles.link}>Зарегистрироваться</Link>
       </p>
     </div>
   );

@@ -9,13 +9,16 @@ export default function UserProfile({ user, currentUser, onUpdateClick }) {
 
   return (
     <div className={styles.profileContainer}>
-      {/* Заголовок профиля */}
+      <img
+        src={`http://localhost:8000/users/avatar/${user.id}`}
+        alt="Аватар"
+        className={styles.avatar}
+      />
       <div className={styles.profileHeader}>
         <h2 className={styles.username}>{user.nickname || user.username}</h2>
         <p className={styles.status}>Статус: {user.status}</p>
       </div>
 
-      {/* Основная информация */}
       <div className={styles.profileInfo}>
         <div className={styles.infoBlock}>
           <span className={styles.label}>Email:</span>
@@ -35,7 +38,6 @@ export default function UserProfile({ user, currentUser, onUpdateClick }) {
         </div>
       </div>
 
-      {/* Кнопка обновления профиля */}
       {isSelf && (
         <div className={styles.updateSection}>
           <button className={styles.updateButton} onClick={onUpdateClick}>
@@ -44,7 +46,6 @@ export default function UserProfile({ user, currentUser, onUpdateClick }) {
         </div>
       )}
 
-      {/* Дополнительные поля для себя и админа */}
       {(isSelf || isAdmin) && (
         <div className={styles.profileMeta}>
           <div className={styles.metaBlock}>

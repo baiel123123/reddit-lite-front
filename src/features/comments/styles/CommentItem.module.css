@@ -63,8 +63,8 @@
   position: absolute;
   right: 0;
   top: 110%;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: #1c1c1c;
+  border: 1px solid #000000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   z-index: 10;
@@ -80,6 +80,7 @@
   border: none;
   background: none;
   cursor: pointer;
+  color: #ffffff;
 }
 
 /* Содержимое комментария */
@@ -160,3 +161,17 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #232324;
+  border: 2px solid #444;
+  margin-bottom: 12px;
+  object-fit: cover;
+  display: block;
+  margin-right: 10px;
+}
+

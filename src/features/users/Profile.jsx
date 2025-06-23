@@ -12,7 +12,6 @@ export default function UserProfilePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Загрузка данных пользователя
     const fetchUser = async () => {
       try {
         const res = await fetch(`http://localhost:8000/users/find/?id=${userId}`, {
@@ -35,6 +34,10 @@ export default function UserProfilePage() {
         const res = await fetch(`http://localhost:8000/posts/user_posts/?user_id=${userId}`, {
           credentials: "include",
         });
+        if (res.status === 404) {
+          setPosts([]);
+          return;
+        }
         if (!res.ok) throw new Error("Не удалось загрузить посты пользователя");
         const data = await res.json();
         setPosts(data);

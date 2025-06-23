@@ -18,6 +18,8 @@
 
 .modalImage {
   width: 100%;
+  max-width: 90vw;
+  max-height: 90vh;
   height: auto;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
