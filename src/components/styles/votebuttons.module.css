@@ -1,22 +1,26 @@
 .voteContainer {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: row;
 }
 
-/* Базовые стили для кнопок голосования */
 .voteButton {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
-  padding: 8px;
+  padding: 0;
   border-radius: 999px;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 20px;
+  min-height: 20px;
 }
 
-/* Цвет при отсутствии голоса */
 .voteButton.upvote {
   color: #bbb;
 }
@@ -25,18 +29,39 @@
   color: #bbb;
 }
 
-/* При наведении — увеличение */
 .voteButton:hover {
   opacity: 0.8;
   transform: scale(1.1);
 }
 
-/* Активный голос за (upvote) */
 .voteButton.upvoted {
-  color: #4CAF50; /* Зеленый */
+  color: #4CAF50; 
 }
 
-/* Активный голос против (downvote) */
 .voteButton.downvoted {
-  color: #f44336; /* Красный */
+  color: #f44336;
+}
+
+.voteCircle {
+  background: #2a3236;
+  border-radius: 999px;
+  width: 60px;
+  height: 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+  margin: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  padding: 0 12px;
+}
+
+.voteCount {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+  line-height: 1;
 }

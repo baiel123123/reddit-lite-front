@@ -95,12 +95,12 @@ const CommentItem = ({
       <div className={styles.commentHeader}>
         <div className={styles.authorInfo}>
           <img
-            src={`http://localhost:8000/users/avatar/${comment.user.id}`}
+            src={comment.user && comment.user.id ? `http://localhost:8000/users/avatar/${comment.user.id}` : "/default-avatar.png"}
             alt="Аватар"
             className={styles.avatar}
           />
           <strong className={styles.authorName}>
-            {comment.user ? (
+            {comment.user && comment.user.id ? (
               <Link to={`/profile/${comment.user.id}`} className={styles.authorName}>
                 {comment.user.username}
               </Link>

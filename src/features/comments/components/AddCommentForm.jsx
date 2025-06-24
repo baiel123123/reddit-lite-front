@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import styles from "../styles/AddCommentForm.module.css";
+import { useAuth } from "../../../context/AuthContext";
 
 function AddCommentForm({ postId, onCommentAdded }) {
   const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const { user } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!user) {
+      alert("Чтобы оставить комментарий, войдите в аккаунт!");
+      return;
+    }
     if (!content.trim()) return;
     
     const tempId = Date.now(); 

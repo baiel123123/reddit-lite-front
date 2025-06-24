@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./styles/UserSearch.module.css";
 import PostItem from "../features/posts/components/PostItem";
@@ -18,22 +18,13 @@ export default function UserSearch() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const tabs = [
+  const tabs = useMemo(() => [
     { id: "posts", label: "Посты", api: "/posts/find/" },
     { id: "users", label: "Пользователи", api: "/users/find/" },
     { id: "subreddits", label: "Сообщества", api: "/subreddit/find/" }
-  ];
+  ], []);
 
-  useEffect(() => {
-    if (!initialQuery.trim()) {
-      setResults([]);
-      setError("");
-      return;
-    }
-    fetchResults(initialQuery, initialTab);
-  }, [initialQuery, initialTab]);
-
-  const fetchResults = async (query, tab) => {
+  const fetchResults = useCallback(async (queryParam, tab) => {
     setLoading(true);
     setError("");
     
@@ -43,30 +34,23 @@ export default function UserSearch() {
 
       let queryString;
       if (tab === "users") {
-        queryString = new URLSearchParams({ 
-          username: query.trim() 
-        }).toString();
+        queryString = new URLSearchParams({ username: queryParam.trim() }).toString();
       } else if (tab === "subreddits") {
-        queryString = new URLSearchParams({ 
-          name: query.trim() 
-        }).toString();
+        queryString = new URLSearchParams({ name: queryParam.trim() }).toString();
       } else if (tab === "posts") {
         queryString = new URLSearchParams({
-          search: query.trim(),
+          search: queryParam.trim(),
           limit: 20,
           offset: 0
         }).toString();
       } else {
-        queryString = new URLSearchParams({ 
-          query: query.trim() 
-        }).toString();
+        queryString = new URLSearchParams({ query: queryParam.trim() }).toString();
       }
       
       const response = await fetch(`http://localhost:8000${tabConfig.api}?${queryString}`, {
         method: "GET",
         credentials: "include",
       });
-      
       if (!response.ok) throw new Error("Ошибка при поиске");
       
       let data = await response.json();
@@ -87,7 +71,16 @@ export default function UserSearch() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [tabs]);
+
+  useEffect(() => {
+    if (!initialQuery.trim()) {
+      setResults([]);
+      setError("");
+      return;
+    }
+    fetchResults(initialQuery, initialTab);
+  }, [initialQuery, initialTab, fetchResults]);
 
   const handleSearch = (e) => {
     e.preventDefault();

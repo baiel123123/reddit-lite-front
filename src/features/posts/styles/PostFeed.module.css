@@ -17,18 +17,18 @@
 
 /* Селект сортировки */
 .sortSelect {
-  background-color: #333;
-  border: 1px solid #444;
+  background-color: #1c1c1c;
   color: #e8e8e8;
   padding: 8px 12px;
+  border: 1px solid #1c1c1c;
   border-radius: 4px;
   margin-bottom: 20px;
 }
 
 /* Карточка поста */
 .postItem {
-  background-color: #1f1f1f;
-  border: 1px solid #444;
+  background-color: #1c1c1c;
+  border: 1px solid #1c1c1c;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 20px;
@@ -159,4 +159,32 @@
 .dot {
   margin-right: 5px;
   font-size: 10px;
+}
+
+
+.voteContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.voteCircle {
+  background: #2a3236;
+  border-radius: 999px;
+  height: 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  padding: 0 2px 0px 12px;
+}
+
+.voteCount {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  line-height: 1;
 }

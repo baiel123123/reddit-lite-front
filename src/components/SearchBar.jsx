@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/SearchBar.module.css";
 import CreatePostModal from "../features/posts/components/CreatePostModal";
+import { useAuth } from "../context/AuthContext";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,6 +16,10 @@ export default function SearchBar() {
   };
 
   const openModal = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     setShowModal(true);
   };
 

@@ -21,7 +21,6 @@ import DeleteUserById from "./features/users/components/DeleteUserById";
 import AdminTools from "./features/users/AdminTools";
 import UserProfilePage from "./features/users/Profile";
 import MyProfile from "./pages/MyProfile";
-import CreatePost from "./features/posts/components/CreatePostModal";
 import EditPost from "./features/posts/components/EditPost";
 import PostPage from "./features/posts/PostPage";
 import SubredditManagerPage from "./features/subreddits/SubredditManagerPage";

@@ -54,3 +54,117 @@ h3 {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   color: #e8e8e8;
 }
+
+/* Стили для поиска по комментариям */
+.searchForm {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 50px;
+  border: 2px solid #444;
+  background: #232324;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+.searchInput:focus {
+  border: 2px solid #ff4500;
+}
+
+.searchButton {
+  background-color: #ff4500;
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.searchButton:hover:not(:disabled) {
+  background-color: #e03d00;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+.searchButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.resetButton {
+  background: #888;
+  border: none;
+  border-radius: 50px;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.resetButton:hover {
+  background: #555;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.postVotesBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  justify-content: flex-start;
+}
+.upvote, .downvote {
+  background: #232324;
+  border: 2px solid #444;
+  color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.upvote:hover {
+  background: #ff4500;
+  color: #fff;
+  border-color: #ff4500;
+}
+.downvote:hover {
+  background: #0079d3;
+  color: #fff;
+  border-color: #0079d3;
+}
+.upvoted {
+  background: #ff4500;
+  color: #fff;
+  border-color: #ff4500;
+}
+.downvoted {
+  background: #0079d3;
+  color: #fff;
+  border-color: #0079d3;
+}
+.upvotesCount {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  min-width: 32px;
+  text-align: center;
+}

@@ -26,7 +26,7 @@ export default function SubredditManagerPage() {
   const fetchMySubreddits = async () => {
     if (!user) return;
     try {
-      const res = await fetch(`${API_URL}/my-subreddits/${user.id}`, {
+      const res = await fetch(`${API_URL}/my-subreddits/`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Ошибка при загрузке сабреддитов");
@@ -36,13 +36,6 @@ export default function SubredditManagerPage() {
       console.error(err);
       setError(err.message);
     }
-  };
-
-  const openCreateModal = () => {
-    setModalMode("create");
-    setForm({ name: "", description: "" });
-    setEditingId(null);
-    setShowFormModal(true);
   };
 
   const openEditModal = (sub) => {
@@ -59,7 +52,6 @@ export default function SubredditManagerPage() {
       const url =
         modalMode === "edit" ? `${API_URL}/${editingId}` : `${API_URL}/create/`;
       const method = modalMode === "edit" ? "PUT" : "POST";
-      // При редактировании оставляем имя неизменным
       const bodyData = modalMode === "edit" ? { description: form.description } : form;
 
       const res = await fetch(url, {
