@@ -1,0 +1,18 @@
+# docker-compose.yml
+version: "3.8"
+
+services:
+  reddit-front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: reddit-front:latest
+    container_name: reddit-front
+    restart: always
+    ports:
+      - "8080:80"        
+    environment:
+      NODE_ENV: production
+    # Если у вас есть .env с переменными для фронта, раскомментируйте:
+    # env_file:
+    #   - .env
