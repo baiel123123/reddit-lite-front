@@ -162,7 +162,7 @@
 
 .userInfo {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;

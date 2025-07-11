@@ -266,7 +266,8 @@ export default function PostPage() {
         upvotes: post.upvotes,
         comments_count: post.comments_count,
       });
-      localStorage.setItem("recentPosts", JSON.stringify(filtered.slice(0, 10)));
+      if (filtered.length > 5) filtered.length = 5;
+      localStorage.setItem("recentPosts", JSON.stringify(filtered));
     }
   }, [post]);
 

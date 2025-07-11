@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserProfile from "./components/UserProfile";
-import Post from "../../components/PostVotes";
+import PostItem from "../posts/components/PostItem";
 
 export default function UserProfilePage() {
   const { userId } = useParams();
@@ -81,7 +81,7 @@ export default function UserProfilePage() {
             onClick={() => navigate(`/post/${post.id}`)}
             style={{ cursor: "pointer", marginBottom: 10 }}
           >
-            <Post post={post} />
+            <PostItem post={post} />
           </div>
         ))
       )}

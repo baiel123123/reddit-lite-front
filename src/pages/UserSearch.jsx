@@ -7,6 +7,41 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+function UserAvatar({ user }) {
+  const size = 36;
+  const url = user.avatar_url
+    ? user.avatar_url
+    : `http://localhost:8000/users/avatar/${user.id}`;
+  return (
+    <img
+      src={url}
+      alt="avatar"
+      style={{
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        objectFit: 'cover',
+        marginRight: 14,
+        border: '2px solid #ff4500',
+        background: 'linear-gradient(135deg, #232324 60%, #ff4500 100%)',
+        boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
+        display: 'block',
+      }}
+      onError={e => { e.target.onerror = null; e.target.src = "/default-avatar.png"; }}
+    />
+  );
+}
+
+// Компонент для иконки сабреддита
+function SubredditIcon({ name }) {
+  if (!name) return (
+    <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#232324', color: '#b3b3b3', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 18, marginRight: 14, border: '2px solid #292929' }}>r</div>
+  );
+  return (
+    <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#272729', color: '#ffb000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 18, marginRight: 14, border: '2px solid #232324' }}>{name[0].toUpperCase()}</div>
+  );
+}
+
 export default function UserSearch() {
   const query = useQuery();
   const initialQuery = query.get("query") || "";
@@ -106,7 +141,8 @@ export default function UserSearch() {
   const renderUserItem = (user) => (
     <li key={user.id} className={styles.userItem}>
       <Link to={`/profile/${user.id}`} className={styles.userLink}>
-        <div className={styles.userInfo}>
+        <div className={styles.userInfo} style={{ alignItems: 'center' }}>
+          <UserAvatar user={user} />
           <div className={styles.userMeta}>
             <span className={styles.userId}>ID: {user.id}</span>
             <span className={styles.username}>{user.username}</span>
@@ -127,6 +163,7 @@ export default function UserSearch() {
     <li key={subreddit.id} className={styles.userItem}>
       <Link to={`/subreddit/${subreddit.id}`} className={styles.userLink}>
         <div className={styles.userInfo}>
+          <SubredditIcon name={subreddit.name} />
           <div className={styles.userMeta}>
             <span className={styles.username}>r/{subreddit.name}</span>
             <span className={styles.userId}>ID: {subreddit.id}</span>

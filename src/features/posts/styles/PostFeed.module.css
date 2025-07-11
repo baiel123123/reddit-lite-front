@@ -35,6 +35,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   overflow: hidden;
+  max-width: 800px;
 }
 
 .postItem:hover {
@@ -149,11 +150,13 @@
 .author {
   margin-right: 5px;
   font-size: 12px;
+  color: white;
 }
 
 .postTime {
   margin-right: 5px;
   font-size: 12px;
+  color: white;
 }
 
 .dot {
