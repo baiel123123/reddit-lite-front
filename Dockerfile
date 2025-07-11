@@ -19,13 +19,13 @@ RUN npm run build
 # └──────────────────────────────────────────┘
 FROM nginx:stable-alpine
 
-# remove the stock default
+# 1) Remove the stock default config inside the container
 RUN rm /etc/nginx/conf.d/default.conf
 
-# copy your one-and-only conf
+# 2) Copy your one-and-only config into conf.d/
 COPY conf.d/default.conf /etc/nginx/conf.d/default.conf
 
-# copy build artifacts
+# 3) Copy the built app
 COPY --from=builder /app/build /usr/share/nginx/html
 
 EXPOSE 80
