@@ -19,15 +19,14 @@ RUN npm run build
 # └──────────────────────────────────────────┘
 FROM nginx:stable-alpine
 
-# Remove default site
+# remove the stock default
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy custom nginx.conf (see below) 
-COPY nginx.conf /etc/nginx/conf.d/
+# copy your one-and-only conf
+COPY conf.d/default.conf /etc/nginx/conf.d/default.conf
 
-# Copy build artifacts
+# copy build artifacts
 COPY --from=builder /app/build /usr/share/nginx/html
 
 EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx","-g","daemon off;"]
