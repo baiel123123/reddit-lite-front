@@ -5,6 +5,7 @@ import UpdateUserModal from "../features/users/components/UpdateUser";
 import CommunityModal from "../features/subreddits/components/CommunityModal";
 import PostItem from "../features/posts/components/PostItem";
 import styles from "./styles/MyProfile.module.css";
+import fetchWithRefresh from '../api.js';
 
 const API_URL = "http://localhost:8000/subreddit";
 
@@ -26,14 +27,14 @@ export default function MyProfile() {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const res = await fetch("http://localhost:8000/users/me", {
+        const res = await fetchWithRefresh("/users/me", {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Ошибка при загрузке пользователя");
         const data = await res.json();
         setUser(data);
 
-        const postsRes = await fetch("http://localhost:8000/posts/my_posts/", {
+        const postsRes = await fetchWithRefresh("/posts/my_posts/", {
           credentials: "include",
         });
         if (postsRes.status === 404) {
@@ -53,7 +54,7 @@ export default function MyProfile() {
         }
 
         const ids = postsData.map((p) => p.id).join(",");
-        const voteRes = await fetch(
+        const voteRes = await fetchWithRefresh(
           `http://localhost:8000/posts/votes/by-user?ids=${ids}`,
           { credentials: "include" }
         );
@@ -78,7 +79,7 @@ export default function MyProfile() {
     const fetchMySubreddits = async () => {
       if (!user) return;
       try {
-        const res = await fetch(`${API_URL}/my-subreddits/`, {
+        const res = await fetchWithRefresh(`${API_URL}/my-subreddits/`, {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Ошибка при загрузке сообществ");
@@ -95,7 +96,7 @@ export default function MyProfile() {
   const handleDelete = async (postId) => {
     if (!window.confirm("Вы уверены, что хотите удалить этот пост?")) return;
     try {
-      const res = await fetch(`http://localhost:8000/posts/delete/${postId}`, {
+      const res = await fetchWithRefresh(`/posts/delete/${postId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -116,7 +117,7 @@ export default function MyProfile() {
       const method = id ? "PUT" : "POST";
       const bodyData = id ? { description: form.description } : form;
 
-      const res = await fetch(url, {
+      const res = await fetchWithRefresh(url, {
         method,
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -127,7 +128,7 @@ export default function MyProfile() {
         const errorData = await res.json();
         throw new Error(errorData.detail || "Ошибка при сохранении");
       }
-      const subRes = await fetch(`${API_URL}/my-subreddits/`, {
+      const subRes = await fetchWithRefresh(`${API_URL}/my-subreddits/`, {
         credentials: "include",
       });
       let data = await subRes.json();
@@ -143,12 +144,12 @@ export default function MyProfile() {
   const handleSubDelete = async (id) => {
     if (!window.confirm("Удалить сообщество?")) return;
     try {
-      const res = await fetch(`${API_URL}/${id}`, {
+      const res = await fetchWithRefresh(`${API_URL}/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
       if (!res.ok) throw new Error("Ошибка при удалении");
-      const subRes = await fetch(`${API_URL}/my-subreddits/`, {
+      const subRes = await fetchWithRefresh(`${API_URL}/my-subreddits/`, {
         credentials: "include",
       });
       const data = await subRes.json();

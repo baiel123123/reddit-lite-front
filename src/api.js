@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:8000";
+// Используйте .env файл: REACT_APP_API_URL=https://api.yourdomain.com
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 const originalFetch = window.fetch;
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import ConfirmModal from "../components/ConfirmModal";
 import styles from "../styles/DeleteMyAccount.module.css";
+import fetchWithRefresh from '../../../api.js';
 
 function DeleteMyAccount() {
   const [error, setError] = useState("");
@@ -11,7 +12,7 @@ function DeleteMyAccount() {
   const navigate = useNavigate();
 
   const deleteAccount = () => {
-    fetch("http://localhost:8000/users/delete/", {
+    fetchWithRefresh("/users/delete/", {
       method: "DELETE",
       credentials: "include",
     })

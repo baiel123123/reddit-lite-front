@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import fetchWithRefresh from '../api.js';
 
 export const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-      fetch("/users/me/", { credentials: "include" })
+      fetchWithRefresh("/users/me/", { credentials: "include" })
         .then(res => {
           if (!res.ok) throw new Error("Unauthorized");
           return res.json();
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   const refreshUser = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/users/me/", { credentials: "include" });
+      const res = await fetchWithRefresh("/users/me/", { credentials: "include" });
       if (!res.ok) throw new Error("Unauthorized");
       const data = await res.json();
       setUser(data);

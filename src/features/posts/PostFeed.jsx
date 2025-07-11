@@ -3,6 +3,7 @@ import styles from "./styles/PostFeed.module.css";
 import useObserver from "../../hooks/useObserver";
 import { formatPosts } from "../../utils/postFormatter";
 import PostItem from "./components/PostItem";
+import fetchWithRefresh from '../api.js';
 
 export default function PostFeed() {
   const [posts, setPosts] = useState([]);
@@ -23,8 +24,8 @@ export default function PostFeed() {
     setLoading(true);
 
     try {
-      const res = await fetch(
-        `http://localhost:8000/posts/lenta/?sort_by=${sortBy}&limit=${limit}&offset=${offset}`,
+      const res = await fetchWithRefresh(
+        `/posts/lenta/?sort_by=${sortBy}&limit=${limit}&offset=${offset}`,
         { credentials: "include" }
       );
       const postsData = await res.json();
@@ -35,8 +36,8 @@ export default function PostFeed() {
       }
 
       const ids = postsData.map((p) => p.id).join(",");
-      const voteRes = await fetch(
-        `http://localhost:8000/posts/votes/by-user?ids=${ids}`,
+      const voteRes = await fetchWithRefresh(
+        `/posts/votes/by-user?ids=${ids}`,
         { credentials: "include" }
       );
       const votes = await voteRes.json();

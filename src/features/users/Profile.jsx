@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserProfile from "./components/UserProfile";
 import PostItem from "../posts/components/PostItem";
+import fetchWithRefresh from '../../api.js';
 
 export default function UserProfilePage() {
   const { userId } = useParams();
@@ -14,7 +15,7 @@ export default function UserProfilePage() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/users/find/?id=${userId}`, {
+        const res = await fetchWithRefresh(`/users/find/?id=${userId}`, {
           credentials: "include",
         });
 
@@ -31,7 +32,7 @@ export default function UserProfilePage() {
 
       const fetchUserPosts = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/posts/user_posts/?user_id=${userId}`, {
+        const res = await fetchWithRefresh(`/posts/user_posts/?user_id=${userId}`, {
           credentials: "include",
         });
         if (res.status === 404) {
@@ -48,7 +49,7 @@ export default function UserProfilePage() {
 
     const fetchCurrentUser = async () => {
       try {
-        const res = await fetch("http://localhost:8000/users/me", {
+        const res = await fetchWithRefresh("/users/me", {
           credentials: "include",
         });
         if (!res.ok) return;

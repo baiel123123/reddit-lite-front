@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./styles/AuthForm.module.css";
+import fetchWithRefresh from '../api.js';
 
 export default function Login() {
   const { login } = useAuth();
@@ -15,7 +16,7 @@ export default function Login() {
     setError("");
 
     try {
-      const loginRes = await fetch("http://localhost:8000/users/login/", {
+      const loginRes = await fetchWithRefresh("/users/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -31,7 +32,7 @@ export default function Login() {
 
       localStorage.setItem("refresh_token", tokens.refresh_token);
 
-      const userRes = await fetch("http://localhost:8000/users/me/", {
+      const userRes = await fetchWithRefresh("/users/me/", {
         credentials: "include",
       });
 

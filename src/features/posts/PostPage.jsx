@@ -5,6 +5,7 @@ import CommentsList from "../comments/components/CommentsList";
 import AddCommentForm from "../comments/components/AddCommentForm";
 import styles from "./styles/PostPage.module.css";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import fetchWithRefresh from '../api.js';
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -26,13 +27,13 @@ export default function PostPage() {
 
   const fetchPost = useCallback(async () => {
     try {
-      const res = await fetch(`http://localhost:8000/posts/${postId}`, {
+      const res = await fetchWithRefresh(`/posts/${postId}`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Пост не найден");
       const data = await res.json();
 
-      const voteRes = await fetch(`http://localhost:8000/posts/votes/by-user?ids=${postId}`, {
+      const voteRes = await fetchWithRefresh(`/posts/votes/by-user?ids=${postId}`, {
         credentials: "include"
       });
       let userVote = null;
@@ -51,8 +52,8 @@ export default function PostPage() {
       if (loadingRef.current) return;
       loadingRef.current = true;
       try {
-        const res = await fetch(
-          `http://localhost:8000/comments/comments/by_post/${postId}?offset=${offsetParam}&limit=${limit}`,
+        const res = await fetchWithRefresh(
+          `/comments/comments/by_post/${postId}?offset=${offsetParam}&limit=${limit}`,
           { credentials: "include" }
         );
         if (!res.ok) throw new Error("Ошибка загрузки комментариев");
@@ -77,7 +78,7 @@ export default function PostPage() {
 
   const fetchCurrentUser = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:8000/users/me", {
+      const res = await fetchWithRefresh("/users/me", {
         credentials: "include",
       });
       if (!res.ok) return;
@@ -90,7 +91,7 @@ export default function PostPage() {
     if (!window.confirm("Удалить комментарий?")) return;
 
     try {
-      const res = await fetch(`http://localhost:8000/comments/delete/${commentId}`, {
+      const res = await fetchWithRefresh(`/comments/delete/${commentId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -105,8 +106,8 @@ export default function PostPage() {
 
   const handleCommentVote = async (commentId, isUpvote) => {
     try {
-      const res = await fetch(
-        `http://localhost:8000/comments/upvote/${commentId}?is_upvote=${isUpvote}`,
+      const res = await fetchWithRefresh(
+        `/comments/upvote/${commentId}?is_upvote=${isUpvote}`,
         { method: "POST", credentials: "include" }
       );
       if (!res.ok) throw new Error("Ошибка голосования");
@@ -128,8 +129,8 @@ export default function PostPage() {
 
   const handleRemoveCommentVote = async (commentId) => {
     try {
-      const res = await fetch(
-        `http://localhost:8000/comments/delete_upvote/${commentId}`,
+      const res = await fetchWithRefresh(
+        `/comments/delete_upvote/${commentId}`,
         { method: "POST", credentials: "include" }
       );
       if (!res.ok) throw new Error("Ошибка удаления голоса");
@@ -175,8 +176,8 @@ export default function PostPage() {
 
   const handleReply = async (parentId, replyContent) => {
     try {
-      const res = await fetch(
-        `http://localhost:8000/comments/reply_to_comment/${parentId}`,
+      const res = await fetchWithRefresh(
+        `/comments/reply_to_comment/${parentId}`,
         {
           method: "POST",
           credentials: "include",
@@ -217,8 +218,8 @@ export default function PostPage() {
     setSearchError("");
     setIsSearching(true);
     try {
-      const res = await fetch(
-        `http://localhost:8000/comments/find/?limit=${limit}&offset=0&content=${encodeURIComponent(searchTerm)}&post_id=${postId}`,
+      const res = await fetchWithRefresh(
+        `/comments/find/?limit=${limit}&offset=0&content=${encodeURIComponent(searchTerm)}&post_id=${postId}`,
         { credentials: "include" }
       );
       if (!res.ok) throw new Error("Ошибка поиска комментариев");

@@ -1,18 +1,19 @@
 // BanUser.jsx
 import React, { useState } from 'react';
+import fetchWithRefresh from '../../../api.js';
 
 export default function BanUser() {
   const [userId, setUserId] = useState('');
   const [message, setMessage] = useState('');
 
   const banUser = async () => {
-    const res = await fetch(`http://localhost:8000/users/ban/${userId}`, { method: 'POST' });
+    const res = await fetchWithRefresh(`/users/ban/${userId}`, { method: 'POST' });
     if (res.ok) setMessage('Пользователь забанен');
     else setMessage('Ошибка при бане');
   };
 
   const unbanUser = async () => {
-    const res = await fetch(`http://localhost:8000/users/unban/${userId}`, { method: 'POST' });
+    const res = await fetchWithRefresh(`/users/unban/${userId}`, { method: 'POST' });
     if (res.ok) setMessage('Пользователь разбанен');
     else setMessage('Ошибка при разбане');
   };

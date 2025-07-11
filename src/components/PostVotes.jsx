@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import VoteButtons from "./VoteButtons";
+import fetchWithRefresh from '../api.js';
 
 export default function PostVotes({ post, onVoteUpdate }) {
   const [upvotes, setUpvotes] = useState(post.upvotes ?? post.upvote ?? 0);
@@ -11,8 +12,8 @@ export default function PostVotes({ post, onVoteUpdate }) {
   }, [post]);
 
   const vote = async (isUpvote) => {
-    const res = await fetch(
-      `http://localhost:8000/posts/upvote/${post.id}?is_upvote=${isUpvote}`,
+    const res = await fetchWithRefresh(
+      `/posts/upvote/${post.id}?is_upvote=${isUpvote}`,
       {
         method: "POST",
         credentials: "include",
@@ -28,7 +29,7 @@ export default function PostVotes({ post, onVoteUpdate }) {
   };
 
   const removeVote = async () => {
-    const res = await fetch(`http://localhost:8000/posts/delete_upvote/${post.id}`, {
+    const res = await fetchWithRefresh(`/posts/delete_upvote/${post.id}`, {
       method: "POST",
       credentials: "include",
     });

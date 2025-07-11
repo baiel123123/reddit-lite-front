@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from '../styles/CommentItem.module.css';
 import stylesCreatePostModal from '../../posts/styles/CreatePostModal.module.css';
 import { timeAgo } from '../../../utils/timeUtils';
+import fetchWithRefresh from '../../../api.js';
 
 const CommentItem = ({
   comment,
@@ -41,7 +42,7 @@ const CommentItem = ({
   };
 
   const handleEditSave = async () => {
-    const res = await fetch(`http://localhost:8000/comments/${comment.id}`, {
+    const res = await fetchWithRefresh(`/comments/${comment.id}`, {
       method: 'PUT',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

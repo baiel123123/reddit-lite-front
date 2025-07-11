@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import styles from "../styles/CreatePostModal.module.css";
 import { useAuth } from "../../../context/AuthContext";
+import fetchWithRefresh from '../../../api.js';
 
 export default function CreatePostModal({ onClose }) {
   const [title, setTitle] = useState("");
@@ -24,7 +25,7 @@ export default function CreatePostModal({ onClose }) {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8000/subreddit/find/?name=${encodeURIComponent(value)}`);
+      const res = await fetchWithRefresh(`/subreddit/find/?name=${encodeURIComponent(value)}`);
       if (!res.ok) throw new Error("Ошибка поиска сабреддитов");
       const data = await res.json();
       setSubredditOptions(data);
@@ -63,7 +64,7 @@ export default function CreatePostModal({ onClose }) {
     formData.append("subreddit_id", subredditId);
     if (imageFile) formData.append("image", imageFile);
     try {
-      const res = await fetch("http://localhost:8000/posts/create/", {
+      const res = await fetchWithRefresh("/posts/create/", {
         method: "POST",
         credentials: "include",
         body: formData,

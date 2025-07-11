@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import fetchWithRefresh from '../api.js';
 
 function truncateSubName(name, max = 14) {
   if (!name) return '';
@@ -85,7 +86,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!user) return;
-    fetch("http://localhost:8000/subreddit/get_all_subscriptions/", { credentials: "include" })
+    fetchWithRefresh("/subreddit/get_all_subscriptions/", { credentials: "include" })
       .then(res => res.json())
       .then(data => {
         // data — массив подписок, у каждой есть .subreddit_id и .subreddit (или аналогично)

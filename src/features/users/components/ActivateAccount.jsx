@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "../styles/ActivateAcoount.module.css";
+import fetchWithRefresh from '../../../api.js';
 
 export default function ActivateAccount({ onClose }) {
   const [code, setCode] = useState("");
@@ -12,7 +13,7 @@ export default function ActivateAccount({ onClose }) {
     setMessage("");
 
     try {
-      const res = await fetch("http://localhost:8000/users/verify-email/", {
+      const res = await fetchWithRefresh("/users/verify-email/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code }),
@@ -37,7 +38,7 @@ export default function ActivateAccount({ onClose }) {
     setResendMessage("");
 
     try {
-      const res = await fetch("http://localhost:8000/users/resend-code/", {
+      const res = await fetchWithRefresh("/users/resend-code/", {
         method: "POST",
         credentials: "include",
       });

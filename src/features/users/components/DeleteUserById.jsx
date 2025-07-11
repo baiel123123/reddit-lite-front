@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import fetchWithRefresh from '../../../api.js';
 
 function DeleteUserById() {
   const [userId, setUserId] = useState("");
@@ -9,7 +10,7 @@ function DeleteUserById() {
     setMessage("");
     setError("");
 
-    fetch(`http://localhost:8000/users/delete_by_id/${userId}`, {
+    fetchWithRefresh(`/users/delete_by_id/${userId}`, {
       method: "DELETE",
       credentials: "include",
     })

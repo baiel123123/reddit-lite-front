@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import fetchWithRefresh from '../../../api.js';
 
 export default function EditPost() {
   const { postId } = useParams();
@@ -13,7 +14,7 @@ export default function EditPost() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/posts/${postId}`);
+        const res = await fetchWithRefresh(`/posts/${postId}`);
         if (!res.ok) throw new Error("Ошибка при загрузке поста");
         const data = await res.json();
 
@@ -32,7 +33,7 @@ export default function EditPost() {
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:8000/posts/update/${postId}`, {
+      const res = await fetchWithRefresh(`/posts/update/${postId}`, {
         method: "PUT",
         credentials: "include",
         headers: {

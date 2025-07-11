@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import PostVotes from "../../../components/PostVotes";
 import styles from "../styles/SubredditDetailPage.module.css";
 import { useAuth } from "../../../context/AuthContext";
+import fetchWithRefresh from '../../../api.js';
 
 const API_URL = "http://localhost:8000";
 
@@ -32,12 +33,12 @@ export default function SubredditDetailPage() {
   async function checkSubscription() {
     if (!user) return;
     try {
-      const res = await fetch(`${API_URL}/subreddit/get_all_subscriptions/`, { credentials: "include" });
+      const res = await fetchWithRefresh(`${API_URL}/subreddit/get_all_subscriptions/`, { credentials: "include" });
       if (!res.ok) throw new Error();
       const data = await res.json();
       const found = data.find(s => String(s.subreddit_id) === String(subredditId));
       if (found) {
-        const subRes = await fetch(`${API_URL}/subreddit/subscription/${found.id}`, { credentials: "include" });
+        const subRes = await fetchWithRefresh(`${API_URL}/subreddit/subscription/${found.id}`, { credentials: "include" });
         if (!subRes.ok) throw new Error();
         await subRes.json();
         setIsSubscribed(true);
@@ -57,13 +58,13 @@ export default function SubredditDetailPage() {
       try {
         setLoading(true);
         setError(null);
-        const resSubreddit = await fetch(`${API_URL}/subreddit/${subredditId}`, {
+        const resSubreddit = await fetchWithRefresh(`${API_URL}/subreddit/${subredditId}`, {
           headers: { "Content-Type": "application/json" },  
         });
         if (!resSubreddit.ok) throw new Error("Не удалось загрузить сабреддит");
         const subredditData = await resSubreddit.json();
         setSubreddit(subredditData);
-        const resPosts = await fetch(
+        const resPosts = await fetchWithRefresh(
           `${API_URL}/posts/by-subreddit/${subredditId}?limit=${limit}&offset=${offset}`,
           { credentials: "include" }
         );
@@ -75,7 +76,7 @@ export default function SubredditDetailPage() {
           const postsData = await resPosts.json();
           if (postsData.length > 0) {
             const ids = postsData.map((p) => p.id).join(",");
-            const voteRes = await fetch(`${API_URL}/posts/votes/by-user?ids=${ids}`, {
+            const voteRes = await fetchWithRefresh(`${API_URL}/posts/votes/by-user?ids=${ids}`, {
               credentials: "include",
             });
             const votes = await voteRes.json();
@@ -113,7 +114,7 @@ export default function SubredditDetailPage() {
   const handleSubscribe = async () => {
     setLoadingSub(true);
     try {
-      const res = await fetch(`${API_URL}/subreddit/create_subscribe/${subredditId}`, { method: "POST", credentials: "include" });
+      const res = await fetchWithRefresh(`${API_URL}/subreddit/create_subscribe/${subredditId}`, { method: "POST", credentials: "include" });
       if (!res.ok) throw new Error();
       setIsSubscribed(true);
       // Можно получить id подписки из ответа, если нужно
@@ -124,7 +125,7 @@ export default function SubredditDetailPage() {
     if (!subscriptionId) return;
     setLoadingSub(true);
     try {
-      const res = await fetch(`${API_URL}/subreddit/delete_subscription/${subscriptionId}`, { method: "DELETE", credentials: "include" });
+      const res = await fetchWithRefresh(`${API_URL}/subreddit/delete_subscription/${subscriptionId}`, { method: "DELETE", credentials: "include" });
       if (!res.ok) throw new Error();
       // После успешной отписки сразу обновляем статус
       await checkSubscription();

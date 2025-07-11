@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "../styles/UpdateUserModal.module.css";
+import fetchWithRefresh from '../../../api.js';
 
 export default function UpdateUserModal({ user, onClose, onUpdate }) {
   const [userData, setUserData] = useState({
@@ -29,7 +30,7 @@ export default function UpdateUserModal({ user, onClose, onUpdate }) {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:8000/users/update_user/", {
+      const res = await fetchWithRefresh("/users/update_user/", {
         method: "PUT",
         credentials: "include", 
         headers: { "Content-Type": "application/json" },

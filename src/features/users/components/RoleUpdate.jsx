@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import fetchWithRefresh from '../../../api.js';
 
 function RoleUpdate() {
   const [userId, setUserId] = useState("");
@@ -10,7 +11,7 @@ function RoleUpdate() {
     setMessage("");
     setError("");
 
-    fetch("http://localhost:8000/users/role_update/", {
+    fetchWithRefresh("/users/role_update/", {
       method: "PUT",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

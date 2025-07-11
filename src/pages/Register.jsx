@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./styles/AuthForm.module.css";
+import fetchWithRefresh from '../api.js';
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -22,7 +23,7 @@ export default function Register() {
     }
 
     // Тут ты можешь менять поля под свою схему SUserRegister
-    fetch("http://localhost:8000/users/register/", {
+    fetchWithRefresh("/users/register/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

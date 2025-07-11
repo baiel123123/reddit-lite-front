@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import styles from "./styles/SubredditManagerPage.module.css";
+import fetchWithRefresh from '../../api.js';
 
 const API_URL = "http://localhost:8000/subreddit";
 
@@ -36,7 +37,7 @@ export default function SubredditManagerPage() {
   const fetchMySubreddits = async () => {
     if (!user) return;
     try {
-      const res = await fetch(`${API_URL}/my-subreddits/`, {
+      const res = await fetchWithRefresh(`${API_URL}/my-subreddits/`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Ошибка при загрузке сабреддитов");
@@ -50,7 +51,7 @@ export default function SubredditManagerPage() {
   const fetchMySubscriptions = async () => {
     if (!user) return;
     try {
-      const res = await fetch(`${API_URL}/get_all_subscriptions/`, {
+      const res = await fetchWithRefresh(`${API_URL}/get_all_subscriptions/`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Ошибка при загрузке подписок");
@@ -64,7 +65,7 @@ export default function SubredditManagerPage() {
   const handleUnsubscribe = async (subscriptionId) => {
     if (!window.confirm("Отписаться от сообщества?")) return;
     try {
-      const res = await fetch(`${API_URL}/delete_subscription/${subscriptionId}`, {
+      const res = await fetchWithRefresh(`${API_URL}/delete_subscription/${subscriptionId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -91,7 +92,7 @@ export default function SubredditManagerPage() {
       const method = modalMode === "edit" ? "PUT" : "POST";
       const bodyData = modalMode === "edit" ? { description: form.description } : form;
 
-      const res = await fetch(url, {
+      const res = await fetchWithRefresh(url, {
         method,
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -116,7 +117,7 @@ export default function SubredditManagerPage() {
   const handleDelete = async (id) => {
     if (!window.confirm("Удалить сабреддит?")) return;
     try {
-      const res = await fetch(`${API_URL}/${id}`, {
+      const res = await fetchWithRefresh(`${API_URL}/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

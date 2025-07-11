@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "../styles/AddCommentForm.module.css";
 import { useAuth } from "../../../context/AuthContext";
+import fetchWithRefresh from '../../../api.js';
 
 function AddCommentForm({ postId, onCommentAdded }) {
   const [content, setContent] = useState("");
@@ -40,7 +41,7 @@ function AddCommentForm({ postId, onCommentAdded }) {
     setContent("");
 
     try {
-      const res = await fetch("http://localhost:8000/comments/create/", {
+      const res = await fetchWithRefresh("/comments/create/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

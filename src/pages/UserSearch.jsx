@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./styles/UserSearch.module.css";
 import PostItem from "../features/posts/components/PostItem";
+import fetchWithRefresh from '../api.js';
+const fetch = fetchWithRefresh;
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -82,7 +84,7 @@ export default function UserSearch() {
         queryString = new URLSearchParams({ query: queryParam.trim() }).toString();
       }
       
-      const response = await fetch(`http://localhost:8000${tabConfig.api}?${queryString}`, {
+      const response = await fetch(`/api${tabConfig.api}?${queryString}`, {
         method: "GET",
         credentials: "include",
       });
@@ -92,7 +94,7 @@ export default function UserSearch() {
 
       if (tab === "posts" && Array.isArray(data) && data.length > 0) {
         const ids = data.map((p) => p.id).join(",");
-        const voteRes = await fetch(`http://localhost:8000/posts/votes/by-user?ids=${ids}`, {
+        const voteRes = await fetch(`/posts/votes/by-user?ids=${ids}`, {
           credentials: "include"
         });
         const votes = await voteRes.json();
