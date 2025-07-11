@@ -1,18 +1,22 @@
-# docker-compose.yml
 version: "3.8"
 
 services:
   reddit-front:
     build:
-      context: .
+      context: ./reddit-front        # папка, где лежат Dockerfile и conf.d/
       dockerfile: Dockerfile
     image: reddit-front:latest
     container_name: reddit-front
     restart: always
     ports:
-      - "8080:80"        
+      - "8080:80"                    # http://localhost:8080 → контейнер:80
     environment:
-      NODE_ENV: production
-    # Если у вас есть .env с переменными для фронта, раскомментируйте:
-    # env_file:
-    #   - .env
+      - NODE_ENV=production
+    depends_on:
+      - back
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    external: true                   # подключаемся к уже существующей сети
