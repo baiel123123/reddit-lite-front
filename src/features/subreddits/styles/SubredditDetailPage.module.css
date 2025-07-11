@@ -1,0 +1,217 @@
+.container {
+  background: #1c1c1c;
+  color: #e8e8e8;
+  border-radius: 10px;
+  max-width: 800px;
+  margin: 32px auto 0 auto;
+  padding: 32px 28px 32px 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  min-height: 60vh;
+}
+
+.headerSection {
+  border-bottom: 2px solid #292929;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.description {
+  color: #bbb;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.meta {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.creator {
+  color: #ff4500;
+  font-weight: 600;
+}
+
+.postsTitle {
+  font-size: 22px;
+  color: #ff4500;
+  font-weight: bold;
+  margin: 24px 0 16px 0;
+}
+
+.noPosts {
+  color: #bbb;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.postsList {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.postItem {
+  background: #232324;
+  border: 1.5px solid #292929;
+  border-radius: 8px;
+  padding: 18px 18px 12px 18px;
+  transition: background 0.18s, box-shadow 0.18s;
+  cursor: pointer;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+}
+.postItem:hover {
+  background: #292929;
+  box-shadow: 0 2px 12px rgba(255,69,0,0.08);
+}
+
+.postTitle {
+  font-size: 19px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.postContent {
+  font-size: 15px;
+  color: #e8e8e8;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+.postMeta {
+  font-size: 13px;
+  color: #bbb;
+  margin-bottom: 8px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.pageButton {
+  background: linear-gradient(90deg, #ff4500 60%, #ff8717 100%);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: background 0.18s, box-shadow 0.18s;
+}
+.pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pageButton:hover:not(:disabled) {
+  background: linear-gradient(90deg, #e03d00 60%, #ff8717 100%);
+  box-shadow: 0 4px 12px rgba(255,69,0,0.10);
+}
+
+.loading {
+  color: #bbb;
+  text-align: center;
+  font-size: 18px;
+  padding: 40px 0;
+}
+
+.error {
+  color: #ff4500;
+  text-align: center;
+  font-size: 18px;
+  padding: 40px 0;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 8px;
+}
+
+.subredditIcon, .subredditIconDefault {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #272729;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffb000;
+  flex-shrink: 0;
+  border: 3px solid #232324;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.subredditIconDefault {
+  color: #b3b3b3;
+  background: #232324;
+}
+
+.subscribeButton {
+  background: linear-gradient(90deg, #ff4500 60%, #ff8717 100%);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: background 0.18s, box-shadow 0.18s, opacity 0.18s;
+}
+.subscribeButton:hover:not(:disabled) {
+  background: linear-gradient(90deg, #e03d00 60%, #ff8717 100%);
+  box-shadow: 0 4px 12px rgba(255,69,0,0.10);
+}
+.unsubscribeButton {
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: background 0.18s, box-shadow 0.18s, opacity 0.18s;
+}
+.unsubscribeButton:hover:not(:disabled) {
+  background: #666;
+  box-shadow: 0 4px 12px rgba(255,69,0,0.10);
+}
+
+.imageWrapper {
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+.postImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+  max-height: 400px;
+}
+.postImage:hover {
+  transform: scale(1.015);
+  cursor: zoom-in;
+} 

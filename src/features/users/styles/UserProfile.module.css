@@ -1,67 +1,95 @@
 .profileContainer {
-  background-color: #1c1c1c;
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 600px;
+  background: #1c1c1c;
+  border: 1.5px solid #232324;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  padding: 40px 40px 32px 40px;
+  max-width: 700px;
   color: #e8e8e8;
+  margin: 0 auto;
+  position: relative;
 }
 
 /* Заголовок профиля */
 .profileHeader {
-  text-align: center;
-  border-bottom: 1px solid #444;
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 2px solid #292929;
+  padding-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .username {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
+  color: #fff;
+  margin-bottom: 2px;
+  letter-spacing: 0.5px;
 }
 
 .status {
-  font-size: 16px;
-  color: #bbb;
+  font-size: 15px;
+  color: #ffb380;
+  margin-bottom: 2px;
 }
 
 /* Блок основной информации */
 .profileInfo {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .infoBlock {
   display: flex;
   justify-content: space-between;
-  background: #292929;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #444;
+  align-items: flex-start;
+  background: #232324;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #292929;
+  margin-bottom: 2px;
+  font-size: 15px;
 }
 
 .fullWidth {
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .label {
-  font-weight: bold;
-  color: #ccc;
+  font-weight: 600;
+  color: #ff4500;
+  margin-right: 8px;
 }
 
 .value {
-  font-size: 16px;
+  font-size: 15px;
+  color: #e8e8e8;
+  word-break: break-word;
 }
 
 /* Блок дополнительной информации */
 .profileMeta {
-  margin-top: 20px;
-  border-top: 1px solid #444;
+  margin-top: 18px;
+  border-top: 2px solid #292929;
   padding-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+}
+
+.metaBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #232324;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #292929;
+  font-size: 14px;
 }
 
 /* Блок админской информации */
@@ -75,20 +103,38 @@
 .updateSection {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .updateButton {
-  background-color: #0079d3;
+  background: linear-gradient(90deg, #ff4500 60%, #ff8717 100%);
   color: #fff;
   border: none;
-  padding: 10px 16px;
+  padding: 10px 22px 10px 18px;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
 .updateButton:hover {
-  background-color: #005bb5;
+  background: linear-gradient(90deg, #e03d00 60%, #ff8717 100%);
+  box-shadow: 0 4px 12px rgba(255,69,0,0.10);
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #232324 60%, #ff4500 100%);
+  border: 3px solid #ff4500;
+  margin-bottom: 14px;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }

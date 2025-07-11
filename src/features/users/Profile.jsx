@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import UserProfile from "./components/UserProfile";
-import Post from "../../components/PostVotes";
+import PostItem from "../posts/components/PostItem";
 
 export default function UserProfilePage() {
   const { userId } = useParams();
@@ -12,7 +12,6 @@ export default function UserProfilePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Загрузка данных пользователя
     const fetchUser = async () => {
       try {
         const res = await fetch(`http://localhost:8000/users/find/?id=${userId}`, {
@@ -35,6 +34,10 @@ export default function UserProfilePage() {
         const res = await fetch(`http://localhost:8000/posts/user_posts/?user_id=${userId}`, {
           credentials: "include",
         });
+        if (res.status === 404) {
+          setPosts([]);
+          return;
+        }
         if (!res.ok) throw new Error("Не удалось загрузить посты пользователя");
         const data = await res.json();
         setPosts(data);
@@ -78,7 +81,7 @@ export default function UserProfilePage() {
             onClick={() => navigate(`/post/${post.id}`)}
             style={{ cursor: "pointer", marginBottom: 10 }}
           >
-            <Post post={post} />
+            <PostItem post={post} />
           </div>
         ))
       )}

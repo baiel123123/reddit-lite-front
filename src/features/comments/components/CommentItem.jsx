@@ -1,54 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import styles from '../styles/CommentItem.module.css';
-
-function timeAgo(dateString) {
-  const now = new Date();
-  const date = new Date(dateString);
-  const seconds = Math.floor((now - date) / 1000);
-
-  const intervals = [
-    { label: 'год', seconds: 31536000 },
-    { label: 'месяц', seconds: 2592000 },
-    { label: 'день', seconds: 86400 },
-    { label: 'час', seconds: 3600 },
-    { label: 'минуту', seconds: 60 },
-    { label: 'секунду', seconds: 1 },
-  ];
-
-  for (let i = 0; i < intervals.length; i++) {
-    const interval = Math.floor(seconds / intervals[i].seconds);
-    if (interval >= 1) {
-      const label = intervals[i].label;
-      return `${interval} ${pluralize(label, interval)} назад`;
-    }
-  }
-  return 'только что';
-}
-
-function pluralize(word, count) {
-  const mod10 = count % 10;
-  const mod100 = count % 100;
-
-  if (mod10 === 1 && mod100 !== 11) return word;
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
-    return {
-      'год': 'года',
-      'месяц': 'месяца',
-      'день': 'дня',
-      'час': 'часа',
-      'минуту': 'минуты',
-      'секунду': 'секунды',
-    }[word] || word;
-  }
-  return {
-    'год': 'лет',
-    'месяц': 'месяцев',
-    'день': 'дней',
-    'час': 'часов',
-    'минуту': 'минут',
-    'секунду': 'секунд',
-  }[word] || word;
-}
+import stylesCreatePostModal from '../../posts/styles/CreatePostModal.module.css';
+import { timeAgo } from '../../../utils/timeUtils';
 
 const CommentItem = ({
   comment,
@@ -68,7 +22,6 @@ const CommentItem = ({
   
   const actionsMenuRef = useRef(null);
   
-  // Скрываем меню при клике вне его области
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (actionsMenuRef.current && !actionsMenuRef.current.contains(e.target)) {
@@ -106,26 +59,32 @@ const CommentItem = ({
     setIsReplying(false);
   };
 
-  // Режим редактирования комментария
   if (isEditing) {
     return (
-      <div style={{ marginLeft: level * 20, padding: '10px', background: '#fff', borderRadius: '4px' }}>
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={3}
-          style={{ width: '100%', border: '1px solid #ccc', borderRadius: '4px', padding: '8px' }}
-        />
-        <div style={{ display: 'flex', gap: '8px', marginTop: '5px' }}>
-          <button onClick={handleEditSave}>Сохранить</button>
-          <button
-            onClick={() => {
-              setIsEditing(false);
-              setContent(comment.content);
-            }}
-          >
-            Отмена
-          </button>
+      <div className={stylesCreatePostModal.modalOverlay}>
+        <div className={stylesCreatePostModal.modalContent}>
+          <button onClick={() => { setIsEditing(false); setContent(comment.content); }} className={stylesCreatePostModal.closeButton}>X</button>
+          <h2>Редактировать комментарий</h2>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={4}
+            className={stylesCreatePostModal.textarea}
+            placeholder="Измените ваш комментарий..."
+          />
+          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+            <button onClick={handleEditSave} className={stylesCreatePostModal.submitButton}>Сохранить</button>
+            <button
+              onClick={() => {
+                setIsEditing(false);
+                setContent(comment.content);
+              }}
+              className={stylesCreatePostModal.submitButton}
+              style={{ background: '#888' }}
+            >
+              Отмена
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -135,10 +94,22 @@ const CommentItem = ({
     <div className={styles.commentContainer}>
       <div className={styles.commentHeader}>
         <div className={styles.authorInfo}>
+          <img
+            src={comment.user && comment.user.id ? `http://localhost:8000/users/avatar/${comment.user.id}` : "/default-avatar.png"}
+            alt="Аватар"
+            className={styles.avatar}
+          />
           <strong className={styles.authorName}>
-            {comment.user?.nickname || comment.user?.username}
+            {comment.user && comment.user.id ? (
+              <Link to={`/profile/${comment.user.id}`} className={styles.authorName}>
+                {comment.user.username}
+              </Link>
+            ) : (
+              "Аноним"
+            )}
           </strong>
           <span className={styles.commentTime}>{timeAgo(comment.created_at)}</span>
+          {console.log(comment.created_at)}
         </div>
         <div className={styles.actionsMenuWrapper} ref={actionsMenuRef}>
           <button

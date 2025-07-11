@@ -4,6 +4,7 @@ import PostItem from "./components/PostItem";
 import CommentsList from "../comments/components/CommentsList";
 import AddCommentForm from "../comments/components/AddCommentForm";
 import styles from "./styles/PostPage.module.css";
+import { FaSearch, FaTimes } from "react-icons/fa";
 
 export default function PostPage() {
   const { postId } = useParams();
@@ -13,6 +14,10 @@ export default function PostPage() {
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState("");
   const [hasMore, setHasMore] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState("");
 
   const limit = 20;
   const offsetRef = useRef(0);
@@ -26,7 +31,16 @@ export default function PostPage() {
       });
       if (!res.ok) throw new Error("Пост не найден");
       const data = await res.json();
-      setPost(data);
+
+      const voteRes = await fetch(`http://localhost:8000/posts/votes/by-user?ids=${postId}`, {
+        credentials: "include"
+      });
+      let userVote = null;
+      if (voteRes.ok) {
+        const votes = await voteRes.json();
+        userVote = votes[postId] ?? null;
+      }
+      setPost({ ...data, user_vote: userVote });
     } catch (err) {
       setError(err.message);
     }
@@ -72,7 +86,6 @@ export default function PostPage() {
     } catch (_) {}
   }, []);
 
-  // Удаление комментария
   const onDeleteComment = async (commentId) => {
     if (!window.confirm("Удалить комментарий?")) return;
 
@@ -113,7 +126,6 @@ export default function PostPage() {
     }
   };
 
-
   const handleRemoveCommentVote = async (commentId) => {
     try {
       const res = await fetch(
@@ -135,7 +147,6 @@ export default function PostPage() {
       if (comment.id === updatedComment.id) {
         let newUpvote = updatedComment.upvote;
 
-        // Если голос удаляется, корректируем счетчик
         if (updatedComment.user_vote === null) {
           newUpvote = comment.user_vote === true ? comment.upvote - 1 : comment.upvote + 1;
         }
@@ -143,8 +154,8 @@ export default function PostPage() {
         return {
           ...comment,
           ...updatedComment,
-          upvote: newUpvote, // Корректируем upvote при отмене
-          children: comment.children || updatedComment.children, // сохраняем вложенные комментарии
+          upvote: newUpvote, 
+          children: comment.children || updatedComment.children,
         };
       }
       if (comment.children && comment.children.length > 0) {
@@ -199,14 +210,66 @@ export default function PostPage() {
     [hasMore, fetchComments]
   );
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchTerm.trim()) return;
+    setSearchLoading(true);
+    setSearchError("");
+    setIsSearching(true);
+    try {
+      const res = await fetch(
+        `http://localhost:8000/comments/find/?limit=${limit}&offset=0&content=${encodeURIComponent(searchTerm)}&post_id=${postId}`,
+        { credentials: "include" }
+      );
+      if (!res.ok) throw new Error("Ошибка поиска комментариев");
+      const data = await res.json();
+      setFlatComments(data);
+      setHasMore(false);
+    } catch (err) {
+      setSearchError(err.message);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const handleResetSearch = () => {
+    setSearchTerm("");
+    setIsSearching(false);
+    setSearchError("");
+    setHasMore(true);
+    setFlatComments([]);
+    offsetRef.current = 0;
+    fetchComments(0);
+  };
+
   useEffect(() => {
     setFlatComments([]);
     offsetRef.current = 0;
     setHasMore(true);
+    setIsSearching(false);
+    setSearchTerm("");
     fetchPost();
     fetchComments(0);
     fetchCurrentUser();
   }, [postId, fetchPost, fetchComments, fetchCurrentUser]);
+
+  useEffect(() => {
+    if (post) {
+      const recent = JSON.parse(localStorage.getItem("recentPosts") || "[]");
+      const filtered = recent.filter(p => p.id !== post.id);
+      filtered.unshift({
+        id: post.id,
+        title: post.title,
+        subreddit: post.subreddit,
+        image: post.image_url || post.image_path,
+        created_at: post.created_at,
+        upvotes: post.upvotes,
+        comments_count: post.comments_count,
+      });
+      if (filtered.length > 5) filtered.length = 5;
+      localStorage.setItem("recentPosts", JSON.stringify(filtered));
+    }
+  }, [post]);
 
   if (error) return <p className={styles.error}>{error}</p>;
   if (!post) return <p className={styles.loading}>Загрузка...</p>;
@@ -230,12 +293,35 @@ export default function PostPage() {
               setFlatComments((prev) =>
                 prev.filter((comment) => comment.id !== tempId)
               );
-            } else {
+            } else if (tempId) {
+              setFlatComments((prev) => [newComment, ...prev]);
+            } else if (newComment) {
               setFlatComments((prev) => [newComment, ...prev]);
             }
           }}
         />
       </div>
+
+      <h3>Поиск по комментариям</h3>
+      <form onSubmit={handleSearch} className={styles.searchForm}>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          placeholder="Введите текст для поиска..."
+          className={styles.searchInput}
+        />
+        <button type="submit" disabled={searchLoading || !searchTerm.trim()} className={styles.searchButton}>
+          <FaSearch />
+        </button>
+        {isSearching && (
+          <button type="button" onClick={handleResetSearch} className={styles.resetButton}>
+            <FaTimes />
+          </button>
+        )}
+      </form>
+      {searchLoading && <p className={styles.loading}>Поиск...</p>}
+      {searchError && <p className={styles.error}>{searchError}</p>}
 
       <h3>Комментарии</h3>
       <CommentsList

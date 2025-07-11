@@ -17,24 +17,25 @@
 
 /* Селект сортировки */
 .sortSelect {
-  background-color: #333;
-  border: 1px solid #444;
+  background-color: #1c1c1c;
   color: #e8e8e8;
   padding: 8px 12px;
+  border: 1px solid #1c1c1c;
   border-radius: 4px;
   margin-bottom: 20px;
 }
 
 /* Карточка поста */
 .postItem {
-  background-color: #1f1f1f;
-  border: 1px solid #444;
+  background-color: #1c1c1c;
+  border: 1px solid #1c1c1c;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 20px;
   cursor: pointer;
   transition: background-color 0.2s ease;
   overflow: hidden;
+  max-width: 800px;
 }
 
 .postItem:hover {
@@ -47,6 +48,7 @@
   font-weight: bold;
   margin-bottom: 10px;
   color: #fff;
+  margin-top: 10px;
 }
 
 /* Текст поста */
@@ -73,6 +75,8 @@
   color: #0079d3;
   text-decoration: none;
   transition: color 0.2s ease;
+  margin-right: 5px;
+  font-size: 12px;
 }
 
 .subredditLink:hover {
@@ -122,4 +126,68 @@
   max-height: 90vh;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.postFooter {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 15px;
+  color: #b0b0b0;
+  margin-top: 12px;
+  margin-bottom: 0;
+  padding-left: 2px;
+}
+
+.commentInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  color: #b0b0b0;
+}
+
+.author {
+  margin-right: 5px;
+  font-size: 12px;
+  color: white;
+}
+
+.postTime {
+  margin-right: 5px;
+  font-size: 12px;
+  color: white;
+}
+
+.dot {
+  margin-right: 5px;
+  font-size: 10px;
+}
+
+
+.voteContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.voteCircle {
+  background: #2a3236;
+  border-radius: 999px;
+  height: 32px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  padding: 0 2px 0px 12px;
+}
+
+.voteCount {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  line-height: 1;
 }
