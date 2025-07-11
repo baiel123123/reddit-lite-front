@@ -3,7 +3,7 @@ import styles from "./styles/PostFeed.module.css";
 import useObserver from "../../hooks/useObserver";
 import { formatPosts } from "../../utils/postFormatter";
 import PostItem from "./components/PostItem";
-import fetchWithRefresh from '../api.js';
+import fetchWithRefresh from '../../api.js';
 
 export default function PostFeed() {
   const [posts, setPosts] = useState([]);

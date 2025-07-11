@@ -5,7 +5,7 @@ import CommentsList from "../comments/components/CommentsList";
 import AddCommentForm from "../comments/components/AddCommentForm";
 import styles from "./styles/PostPage.module.css";
 import { FaSearch, FaTimes } from "react-icons/fa";
-import fetchWithRefresh from '../api.js';
+import fetchWithRefresh from '../../api.js';
 
 export default function PostPage() {
   const { postId } = useParams();
