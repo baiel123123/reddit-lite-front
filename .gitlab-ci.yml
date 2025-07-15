@@ -35,7 +35,8 @@ deploy-job:
     - ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "
         docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA &&
         docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest &&
-        cd /home/sat_user/reddit &&
-        docker-compose pull reddit_front &&
-        docker-compose up -d reddit_front
+        cd /home/sat_user/reddit  
+        docker compose stop reddit_front || true
+        docker compose rm -f reddit_front || true
+        docker compose up -d reddit_front
       "
