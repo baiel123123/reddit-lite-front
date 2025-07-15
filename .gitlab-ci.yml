@@ -20,20 +20,22 @@ build:
   only:
     - main
 
-deploy:
+deploy-job:
   stage: deploy
   image: alpine:latest
-  before_script:
-    - apk add --no-cache openssh-client
-    - mkdir -p ~/.ssh && echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-  script:
-    - ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "
-        docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA &&
-        docker stop reddit_front || true &&
-        docker rm reddit_front || true &&
-        docker run -d --name reddit_front -p 80:80 $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-      "
-  environment:
-    name: production
   only:
     - main
+  environment: production
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+  script:
+    - ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "
+        docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA &&
+        docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest &&
+        cd /home/sat_user/reddit &&
+        docker-compose pull reddit_front &&
+        docker-compose up -d reddit_front
+      "
