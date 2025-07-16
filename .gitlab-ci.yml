@@ -39,8 +39,10 @@ deploy-job:
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
   script:
-    - ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "bash -c '
-        cd /home/sat_user/reddit &&
-        docker compose pull reddit_front &&
-        docker compose up -d reddit_front
-      '"
+    ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "bash -c '
+      cd /home/sat_user/reddit &&
+      docker compose stop frontend || true &&
+      docker compose rm -f frontend || true &&
+      docker compose pull frontend &&
+      docker compose up -d frontend
+    '"
