@@ -43,6 +43,7 @@ deploy-job:
       cd /home/sat_user/reddit &&
       docker compose stop frontend || true &&
       docker compose rm -f frontend || true &&
+      docker container rm -f reddit_front || true &&
       docker compose pull frontend &&
       docker compose up -d frontend
     '"
