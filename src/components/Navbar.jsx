@@ -165,7 +165,7 @@ export default function Navbar() {
                     style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#e8e8e8', textDecoration: 'none', borderRadius: 8, padding: '6px 8px', transition: 'background 0.18s', background: location.pathname === `/subreddit/${sub.id}` ? '#232324' : 'none' }}
                     title={sub.name}
                   >
-                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#272729', color: '#ffb000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15, border: '2px solid #232324' }}>{sub.name[0].toUpperCase()}</div>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#272729', color: '#ffb000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15, border: '2px solid #232324' }}>{sub.name && sub.name[0] ? sub.name[0].toUpperCase() : "?"}</div>
                     <span style={{ fontSize: 15, fontWeight: 500 }}>r/{truncateSubName(sub.name)}</span>
                   </Link>
                 </li>
@@ -184,7 +184,7 @@ export default function Navbar() {
                     style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#e8e8e8', textDecoration: 'none', borderRadius: 8, padding: '6px 8px', transition: 'background 0.18s', background: location.pathname === `/subreddit/${sub.id}` ? '#232324' : 'none' }}
                     title={sub.name}
                   >
-                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#272729', color: '#ffb000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15, border: '2px solid #232324' }}>{sub.name[0].toUpperCase()}</div>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#272729', color: '#ffb000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 15, border: '2px solid #232324' }}>{sub.name && sub.name[0] ? sub.name[0].toUpperCase() : "?"}</div>
                     <span style={{ fontSize: 15, fontWeight: 500 }}>r/{truncateSubName(sub.name)}</span>
                   </Link>
                 </li>
